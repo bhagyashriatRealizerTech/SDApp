@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <GridView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/grid_dietmenu"
+        android:background="#ffffff"
+        android:horizontalSpacing="10dp"
+        android:verticalSpacing="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_above="@+id/layout_order"
+        android:numColumns="2">
+    </GridView>
+
+<RelativeLayout
+    android:id="@+id/layout_order"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:layout_alignParentBottom="true"
+    android:orientation="horizontal"
+    android:layout_marginTop="10dp"
+    android:layout_marginBottom="1dp"
+    android:background="@color/colorAccent">
+    <RelativeLayout
+        android:id="@+id/layout_inner"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:layout_marginBottom="1dp"
+        android:paddingRight="10dp"
+        android:background="#6a5a05">
+    <ImageView
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_centerVertical="true"
+        android:src="@drawable/foodcart"
+        android:layout_marginLeft="15dp"
+        android:id="@+id/img_cart"/>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_toRightOf="@+id/img_cart"
+        android:layout_marginLeft="10dp"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:textSize="16sp"
+            android:text="0 Item in cart"
+            android:gravity="bottom"
+            android:textColor="#ffffff"
+            android:id="@+id/txt_menu_count"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:text="₹ 00.00"
+            android:textColor="#ffffff"
+            android:gravity="center_vertical"
+            android:id="@+id/txt_menu_price"
+            />
+    </LinearLayout>
+</RelativeLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:layout_marginRight="10dp"
+        android:layout_toRightOf="@+id/layout_inner"
+        android:layout_centerVertical="true"
+        android:text="Order Now"
+        android:gravity="center"
+        android:textColor="#ffffff"
+        android:id="@+id/txt_order"
+        />
+
+</RelativeLayout>
+    <com.realizer.sallado.view.ProgressWheel
+        android:id="@+id/loading"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:visibility="gone"
+        android:layout_centerInParent="true"
+        app:matProg_barColor="@color/colorAccent"
+        app:matProg_progressIndeterminate="true"
+        />
+</RelativeLayout>

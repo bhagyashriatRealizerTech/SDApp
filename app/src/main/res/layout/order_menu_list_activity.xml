@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:background="#d3d3d3"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/layout_addres"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:padding="5dp"
+        android:background="@drawable/layout_white_curved"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Address: "
+            android:id="@+id/adrs"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:padding="4dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:id="@+id/txt_address"
+            android:textSize="16sp"
+            android:layout_marginTop="4dp"
+            android:layout_toRightOf="@+id/adrs"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Total: "
+            android:id="@+id/total"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginTop="5dp"
+            android:layout_below="@+id/txt_address"
+            android:padding="4dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Total Price"
+            android:id="@+id/txt_total"
+            android:layout_below="@+id/txt_address"
+            android:textSize="18sp"
+            android:layout_marginTop="5dp"
+            android:layout_toRightOf="@+id/adrs"
+            android:padding="4dp"/>
+    </RelativeLayout>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/lst_menu"
+        android:background="#00ffffff"
+        android:horizontalSpacing="10dp"
+        android:verticalSpacing="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_above="@+id/btn_proceed"
+        android:layout_below="@+id/layout_addres"
+        android:numColumns="2">
+    </ListView>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:id="@+id/btn_proceed"
+        android:background="@drawable/square_background_curved"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="2dp"
+        android:layout_marginTop="10dp"
+        android:layout_alignParentBottom="true"
+        android:textSize="20sp"
+        android:text="Proceed to Pay"
+        android:textColor="#ffffff"
+        android:textAllCaps="false"/>
+
+    <com.realizer.sallado.view.ProgressWheel
+        android:id="@+id/loading"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:visibility="gone"
+        android:layout_centerInParent="true"
+        app:matProg_barColor="@color/colorAccent"
+        app:matProg_progressIndeterminate="true"
+        />
+</RelativeLayout>

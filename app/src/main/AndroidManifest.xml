@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.realizer.sallado">
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:largeHeap="true"
+        android:hardwareAccelerated="false"
+        android:theme="@style/AppTheme">
+        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+        <activity android:name="com.facebook.FacebookActivity"
+            android:configChanges=
+                "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:label="@string/app_name" />
+        <activity android:name=".SplashScreen"
+            android:hardwareAccelerated="false" android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>   <action android:name="OPEN_ACTIVITY_1" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".MainActivity"
+            android:screenOrientation="portrait"
+            />
+        <activity android:name=".LoginActivity"
+            android:screenOrientation="portrait"
+            />
+        <activity android:name=".MonthlyDietActivity"
+            android:screenOrientation="portrait"
+            />
+        <activity android:name=".DoctorlistActivity"
+            android:screenOrientation="portrait"
+            />
+        <activity android:name=".DoctorsdetailActivity"
+            android:screenOrientation="portrait"
+            />
+        <activity android:name=".DietPlanListActivity"
+            android:screenOrientation="portrait"
+            />
+        <activity android:name=".CrashEatersActivity"
+            android:screenOrientation="portrait"
+            />
+        <activity android:name=".DietMenuListActivity"
+            android:screenOrientation="portrait"
+            />
+        <activity android:name=".DietPlanDetailActivity"
+            android:screenOrientation="portrait"
+            />
+        <activity android:name=".SignUpActivity"
+            android:screenOrientation="portrait"
+            />
+        <activity android:name=".OrderMenuListActivity"
+            android:screenOrientation="portrait"
+            />
+        <activity android:name=".MyAccountActivity"
+            android:screenOrientation="portrait"
+            />
+        <activity android:name=".BookAppointmentActivity"
+            android:screenOrientation="portrait"
+            />
+    </application>
+
+</manifest>
