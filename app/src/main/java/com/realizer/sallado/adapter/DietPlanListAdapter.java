@@ -72,21 +72,9 @@ public class DietPlanListAdapter extends BaseAdapter {
             holder.book = (Button) this.convertView.findViewById(R.id.btn_book);
 
             holder.name.setText(dietList.get(position).getProgramName());
-            holder.price.setText(dietList.get(position).getProgramPrice());
-            holder.ratings.setText(dietList.get(position).getProgramRatings());
-
-/*            if(dietList.get(position).getProgramName().equalsIgnoreCase("Weight Gain")){
-                Bitmap largeIcon = BitmapFactory.decodeResource(context.getResources(), R.drawable.weightgain);
-                holder.dietImage.setImageBitmap(largeIcon);
-            }
-            else if(dietList.get(position).getProgramName().equalsIgnoreCase("Weight Loss")){
-                Bitmap largeIcon = BitmapFactory.decodeResource(context.getResources(), R.drawable.weightloss);
-                holder.dietImage.setImageBitmap(largeIcon);
-            }
-            else {
-                Bitmap largeIcon = BitmapFactory.decodeResource(context.getResources(), R.drawable.athlit);
-                holder.dietImage.setImageBitmap(largeIcon);
-            }*/
+            holder.ratings.setText("Program Span: "+dietList.get(position).getProgramDays()+" Days");
+            holder.price.setText(dietList.get(position).getProgramType());
+            holder.includes.setText(dietList.get(position).getProgramDescription());
 
             if(!dietList.get(position).getProgramThumbnailUrl().isEmpty()){
                 ImageStorage.setThumbnail(holder.dietImage,dietList.get(position).getProgramThumbnailUrl());
@@ -103,15 +91,6 @@ public class DietPlanListAdapter extends BaseAdapter {
         holder.detail.setVisibility(View.GONE);
         holder.book.setVisibility(View.GONE);
 
-       /* holder.detail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int tempPosition = (Integer) view.getTag();
-                Intent intent = new Intent(context, DietPlanDetailActivity.class);
-                intent.putExtra("ProgramId",dietList.get(tempPosition).getProgramId());
-                context.startActivity(intent);
-            }
-        });*/
 
         return this.convertView;
     }

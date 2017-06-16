@@ -362,21 +362,6 @@ public class DietPlanDetailActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
-        /*if(dietPlanCalenderModels.size() > 0) {
-            List <DietPlanCalenderModel> dietPlanList = new ArrayList<>();
-            for(int i=0;i<7;i++){
-                dietPlanList.add(dietPlanCalenderModels.get(i));
-            }
-            DietPlanCalenderListAdapter dietListAdapter = new DietPlanCalenderListAdapter(dietPlanList, DietPlanDetailActivity.this);
-            dietgrid.setAdapter(dietListAdapter);
-        }
-        scrollView.post(new Runnable() {
-            @Override
-            public void run() {
-                scrollView.fullScroll(ScrollView.FOCUS_UP);
-            }
-        });*/
     }
     class CustomGestureDetector extends GestureDetector.SimpleOnGestureListener {
         @Override

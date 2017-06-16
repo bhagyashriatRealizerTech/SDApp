@@ -16,14 +16,14 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
-
     </ViewFlipper>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="25dp"
-        android:layout_below="@+id/viewFlipper">
+        android:layout_above="@+id/txt_copyright"
+        android:layout_marginTop="25dp">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -32,7 +32,7 @@
 <LinearLayout
     android:layout_width="0dp"
     android:layout_weight="1"
-    android:layout_height="165dp"
+    android:layout_height="140dp"
     android:id="@+id/layout_monthly"
     android:layout_marginRight="10dp"
     android:background="@drawable/dashboard_icon_background"
@@ -49,14 +49,14 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Monthly Diet\nProgram"
+        android:text="Diet Program"
         android:textSize="16sp"
         android:layout_marginTop="7dp"
         android:textAlignment="center"/>
 </LinearLayout>
     <LinearLayout
         android:layout_width="0dp"
-        android:layout_height="165dp"
+        android:layout_height="140dp"
         android:layout_weight="1"
         android:id="@+id/layout_crasheater"
         android:layout_alignParentRight="true"
@@ -81,12 +81,20 @@
             android:textAlignment="center"/>
     </LinearLayout>
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/main_layout"
+            android:id="@+id/main_layoutsecond"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal">
     <LinearLayout
-        android:layout_width="170dp"
-        android:layout_height="150dp"
-        android:layout_marginTop="20dp"
-        android:id="@+id/layout_chakana"
-        android:layout_below="@+id/main_layout"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_marginRight="10dp"
+        android:layout_height="140dp"
+        android:id="@+id/layout_myplan"
         android:background="@drawable/dashboard_icon_background"
         android:layout_centerHorizontal="true"
         android:orientation="vertical">
@@ -96,25 +104,54 @@
             android:layout_marginTop="7dp"
             android:layout_marginRight="7dp"
             android:layout_marginLeft="7dp"
-            android:src="@drawable/daaruchakhnaimage"
+            android:src="@drawable/weightloss"
             android:scaleType="fitXY"
             android:layout_gravity="center_horizontal"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Daaru Chakhna"
+            android:text="My Plans"
             android:textSize="16sp"
             android:gravity="center"
             android:textAlignment="center"/>
     </LinearLayout>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginTop="5dp"
-            android:layout_below="@+id/layout_chakana"
-            android:gravity="center"
-            android:textSize="12sp"
-            android:text="© RealizerTech 2017"/>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="140dp"
+                android:layout_marginLeft="10dp"
+                android:id="@+id/layout_chakana"
+                android:layout_below="@+id/main_layout"
+                android:background="@drawable/dashboard_icon_background"
+                android:layout_centerHorizontal="true"
+                android:orientation="vertical">
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:layout_marginTop="7dp"
+                    android:layout_marginRight="7dp"
+                    android:layout_marginLeft="7dp"
+                    android:src="@drawable/daaruchakhnaimage"
+                    android:scaleType="fitXY"
+                    android:layout_gravity="center_horizontal"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Daaru Chakhna"
+                    android:textSize="16sp"
+                    android:gravity="center"
+                    android:textAlignment="center"/>
+            </LinearLayout>
+        </LinearLayout>
     </RelativeLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="5dp"
+        android:gravity="center"
+        android:textSize="12sp"
+        android:id="@+id/txt_copyright"
+        android:text="© RealizerTech 2017"/>
 </RelativeLayout>

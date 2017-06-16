@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:background="#d3d3d3"
+    android:layout_height="wrap_content">
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="10dp"
+        android:dividerHeight="10dp"
+        android:divider="@android:color/transparent"
+        android:id="@+id/changeList">
+
+    </ListView>
+
+    <com.realizer.sallado.view.ProgressWheel
+        android:id="@+id/loading"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:visibility="gone"
+        android:layout_centerInParent="true"
+        app:matProg_barColor="@color/colorAccent"
+        app:matProg_progressIndeterminate="true"
+        />
+
+</RelativeLayout>

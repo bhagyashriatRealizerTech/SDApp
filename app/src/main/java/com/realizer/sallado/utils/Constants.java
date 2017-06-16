@@ -110,6 +110,13 @@ public class Constants {
         return outdate;
     }
 
+    public static String getMediumDate(Date date){
+        String outdate="";
+        SimpleDateFormat output = new SimpleDateFormat("dd MMM yyyy");
+        outdate = output.format(date);
+        return outdate;
+    }
+
     public static String getDayOfWeek(int day){
         switch (day) {
             case Calendar.SUNDAY:

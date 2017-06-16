@@ -38,7 +38,7 @@ import java.io.ByteArrayOutputStream;
 
 public class MainActivity extends AppCompatActivity {
 
-    LinearLayout monthlydiet,crasheaters,daaruchakna;
+    LinearLayout monthlydiet,crasheaters,daaruchakna,myDiet;
     private ViewFlipper mViewFlipper;
     private GestureDetector mGestureDetector;
     FirebaseDatabase database;
@@ -50,9 +50,7 @@ public class MainActivity extends AppCompatActivity {
             R.drawable.image1,
             R.drawable.image2,
             R.drawable.image3,
-            R.drawable.image4,
-            R.drawable.crasheater,
-            R.drawable.weightloss
+            R.drawable.image4
     };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
         monthlydiet = (LinearLayout) findViewById(R.id.layout_monthly);
         crasheaters = (LinearLayout) findViewById(R.id.layout_crasheater);
         daaruchakna = (LinearLayout) findViewById(R.id.layout_chakana);
+        myDiet = (LinearLayout) findViewById(R.id.layout_myplan);
         mViewFlipper = (ViewFlipper) findViewById(R.id.viewFlipper);
 
         // Set in/out flipping animations
@@ -141,6 +140,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, DietMenuListActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        myDiet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, DietPlanListActivity.class);
+                intent.putExtra("From","MyDiet");
                 startActivity(intent);
             }
         });

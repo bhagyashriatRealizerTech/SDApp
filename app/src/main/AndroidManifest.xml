@@ -69,6 +69,16 @@
         <activity android:name=".BookAppointmentActivity"
             android:screenOrientation="portrait"
             />
+
+        <activity android:name=".DietDayPlanListActivity"
+            android:screenOrientation="portrait"
+            />
+        <activity android:name=".DietDayPlanActivity"
+            android:screenOrientation="portrait"
+            />
+
+        <activity android:name=".DietChangePlanActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

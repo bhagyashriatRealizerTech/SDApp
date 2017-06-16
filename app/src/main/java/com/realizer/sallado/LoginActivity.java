@@ -48,6 +48,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.realizer.sallado.databasemodel.DishGroup;
+import com.realizer.sallado.databasemodel.DishGroupItem;
 import com.realizer.sallado.databasemodel.User;
 import com.realizer.sallado.utils.Constants;
 import com.realizer.sallado.view.ProgressWheel;
@@ -55,8 +57,10 @@ import com.realizer.sallado.view.ProgressWheel;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.Callable;
@@ -74,6 +78,7 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     FirebaseUser currentUser;
     String email,fromWhere,name;
+    Button button;
     EditText mobileno;
     ProgressWheel loading;
     @Override
@@ -220,7 +225,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 fromWhere = "button";
                 loading.setVisibility(View.VISIBLE);
-               userLogin();
+                userLogin();
             }
         });
 
@@ -252,42 +257,47 @@ public class LoginActivity extends AppCompatActivity {
 
     public void userLogin(){
         if(fromWhere.equalsIgnoreCase("button")) {
-            Query query = myRef.orderByChild("mobileNo").equalTo(mobileno.getText().toString().trim());
-            query.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.exists()) {
-                        // dataSnapshot is the "issue" node with all children with id 0
-                        for (DataSnapshot issue : dataSnapshot.getChildren()) {
-                            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
-                            SharedPreferences.Editor edit = preferences.edit();
-                            User user  = issue.getValue(User.class);
-                            edit.putString("UserName",user.getUserName());
-                            edit.putString("DietType",user.getUserDietType());
-                            edit.putString("Email",user.getEmailId());
-                            edit.putString("UserID",issue.getKey());
-                            edit.putString("IsLogin","true");
-                            edit.apply();
+            if(mobileno.getText().toString().trim().length() >0 || mobileno.getText().toString().trim().length()<10) {
+                Query query = myRef.orderByChild("mobileNo").equalTo(mobileno.getText().toString().trim());
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            // dataSnapshot is the "issue" node with all children with id 0
+                            for (DataSnapshot issue : dataSnapshot.getChildren()) {
+                                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
+                                SharedPreferences.Editor edit = preferences.edit();
+                                User user = issue.getValue(User.class);
+                                edit.putString("UserName", user.getUserName());
+                                edit.putString("DietType", user.getUserDietType());
+                                edit.putString("Email", user.getEmailId());
+                                edit.putString("UserID", issue.getKey());
+                                edit.putString("IsLogin", "true");
+                                edit.apply();
 
+                            }
+                            loading.setVisibility(View.GONE);
+
+                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            loading.setVisibility(View.GONE);
+                            Constants.alertDialog(LoginActivity.this, "Login", "Invalid Credentials");
                         }
-                        loading.setVisibility(View.GONE);
 
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                        startActivity(intent);
-                        finish();
-                    }
-                    else {
-                        loading.setVisibility(View.GONE);
-                        Constants.alertDialog(LoginActivity.this,"Login","Invalid Credentials");
                     }
 
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    loading.setVisibility(View.GONE);
-                }
-            });
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        loading.setVisibility(View.GONE);
+                    }
+                });
+            }
+            else {
+                loading.setVisibility(View.GONE);
+                Constants.alertDialog(LoginActivity.this, "Login", "Please Enter valid Mobile Number");
+            }
         }
         else {
             Query query = myRef.orderByChild("userLoginID").equalTo(email);

@@ -187,14 +187,15 @@ public class OrderMenuListActivity extends AppCompatActivity {
     public void changePrice(int pric){
 
         total = pric;
-        price.setText("₹ "+total);
+        price.setText("₹ "+total+"\nTax: ₹ 67\nGrandTotal:  ₹ "+(total+67));
     }
 
     public void orderItem(DietMenuModel orderedFood,String type){
         if(type.equalsIgnoreCase("add")){
             dietMenuModels.add(orderedFood);
         }
-        else if(type.equalsIgnoreCase("remove")){
+        else if(type.equalsIgnoreCase("remove"
+        )){
             for(int i=0;i<dietMenuModels.size();i++){
                 if(orderedFood.getMenuID().equalsIgnoreCase(dietMenuModels.get(i).getMenuID())){
                     dietMenuModels.remove(i);

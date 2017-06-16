@@ -3,4 +3,8 @@
     <string name="facebook_app_id">121057321794951</string>
     <string name="fa_edit">&#xf044;</string>
     <string name="fa_close">&#xf00d;</string>
+    <string name="fa_check_circle">&#xf058;</string>
+    <string name="com_facebook_loginview_log_out_button">Log out</string>
+    <string name="com_facebook_loginview_log_in_button">Log in</string>
+    <string name="com_facebook_loginview_log_in_button_long">Log In</string>
 </resources>

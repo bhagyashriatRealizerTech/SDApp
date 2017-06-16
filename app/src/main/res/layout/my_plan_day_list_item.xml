@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="10dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="6dp"
+    android:layout_marginBottom="6dp"
+    android:background="@drawable/shadoweffect">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="0.2"
+            android:layout_height="55dp"
+            android:background="@drawable/square_background_curved"
+            android:layout_margin="7dp"
+            android:text="Day 1"
+            android:textColor="#ffffff"
+            android:id="@+id/txt_dayNo"
+            android:textSize="16sp"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"/>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="0.8"
+            android:layout_marginTop="7dp"
+            android:layout_marginBottom="7dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/txt_Dayname"
+                    android:text="Day Label"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:layout_marginRight="3dp"
+                    android:padding="3dp" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="0.6"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/txt_date"
+                    android:text="26 Aug 2017"
+                    android:textSize="16sp"
+                    android:padding="3dp" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:id="@+id/txt_dayDesc"
+                android:text="Day Label"
+                android:textSize="14sp"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:padding="3dp" />
+            <TextView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:padding="3dp"
+                android:textSize="22sp"
+                android:textColor="#228B22"
+                android:id="@+id/txt_dayDone"
+                android:gravity="center"/>
+                </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

@@ -99,44 +99,93 @@
             android:paddingLeft="12dp"
             android:background="@drawable/dashboard_icon_background"
             />
-       <!-- <EditText
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:layout_below="@+id/edt_mobno"
-            android:id="@+id/edt_userid"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
-            android:layout_marginBottom="20dp"
-            android:hint="User Id"
-            android:paddingLeft="12dp"
-            android:inputType="textPassword"
             android:background="@drawable/dashboard_icon_background"
+            android:id="@+id/txt_gender">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="7dp"
+            android:text="Select Gender"
+            android:textSize="18sp"
+            android:paddingLeft="12dp"
+            android:paddingTop="7dp"
             />
-        <EditText
-            android:layout_below="@+id/edt_userid"
-            android:id="@+id/edt_password"
+        <RadioGroup
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/gender"
+            android:layout_marginLeft="5dp"
+            android:paddingBottom="5dp"
+            android:layout_below="@+id/txt_gender">
+            <RadioButton
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:id="@+id/female"
+                android:layout_height="wrap_content"
+                android:text="Female"/>
+            <RadioButton
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:id="@+id/male"
+                android:layout_height="wrap_content"
+                android:text="Male"/>
+        </RadioGroup>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
-            android:layout_marginBottom="20dp"
-            android:hint="Password"
-            android:paddingLeft="12dp"
-            android:inputType="textPassword"
+            android:layout_marginTop="20dp"
             android:background="@drawable/dashboard_icon_background"
+            android:layout_below="@+id/txt_gender"
+            android:id="@+id/txt_diet">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:text="Select Diet Type"
+            android:textSize="18sp"
+            android:paddingLeft="12dp"
+            android:paddingTop="7dp"
             />
-        <EditText
-            android:layout_below="@+id/edt_password"
-            android:id="@+id/edt_confpassword"
+        <RadioGroup
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:hint="Password"
-            android:paddingLeft="12dp"
-            android:inputType="textPassword"
-            android:background="@drawable/dashboard_icon_background"
-            />-->
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginLeft="5dp"
+            android:paddingBottom="5dp"
+            android:id="@+id/dietType">
+            <RadioButton
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:id="@+id/veg"
+                android:layout_height="wrap_content"
+                android:text="Veg"/>
+            <RadioButton
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:id="@+id/nonveg"
+                android:layout_height="wrap_content"
+                android:text="NonVeg"/>
+            <RadioButton
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:id="@+id/both"
+                android:layout_height="wrap_content"
+                android:text="Both"/>
+        </RadioGroup>
+        </LinearLayout>
+
         <Button
             android:id="@+id/btn_signup"
             android:layout_width="match_parent"
@@ -149,7 +198,7 @@
             android:layout_marginRight="35dp"
             android:background="@drawable/square_background_curved"
             android:textColor="#FFF"
-            android:layout_below="@+id/edt_mobno"
+            android:layout_below="@+id/txt_diet"
             />
         </RelativeLayout>
     </ScrollView>

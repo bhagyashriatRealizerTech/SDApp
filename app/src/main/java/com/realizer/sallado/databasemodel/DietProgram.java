@@ -23,6 +23,7 @@ public class DietProgram implements Serializable{
     public boolean dinnerInclude;
     public boolean lunchInclude;
     public boolean snacksInclude;
+    public String key;
 
     public boolean isCustomized() {
         return customized;
@@ -134,5 +135,13 @@ public class DietProgram implements Serializable{
 
     public void setSnacksInclude(boolean snacksInclude) {
         this.snacksInclude = snacksInclude;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 }

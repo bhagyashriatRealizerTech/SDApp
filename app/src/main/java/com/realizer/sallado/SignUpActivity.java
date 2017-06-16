@@ -16,6 +16,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.facebook.CallbackManager;
@@ -51,6 +52,7 @@ public class SignUpActivity extends AppCompatActivity {
     FirebaseDatabase database;
     DatabaseReference myRef;
     EditText fname,lname,emailid,mobno;
+    RadioButton male,female,veg,nonveg,both;
     TextView bdy;
     ProgressWheel loading;
     @Override
@@ -76,6 +78,13 @@ public class SignUpActivity extends AppCompatActivity {
         mobno = (EditText) findViewById(R.id.edt_mobno);
         bdy = (TextView) findViewById(R.id.txt_bday);
         loading =(ProgressWheel) findViewById(R.id.loading);
+        male = (RadioButton) findViewById(R.id.male);
+        female = (RadioButton) findViewById(R.id.female);
+        veg = (RadioButton) findViewById(R.id.veg);
+        nonveg = (RadioButton) findViewById(R.id.nonveg);
+        both = (RadioButton) findViewById(R.id.both);
+        female.setChecked(true);
+        veg.setChecked(true);
 
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,9 +102,21 @@ public class SignUpActivity extends AppCompatActivity {
                 newUser.setUserType("Customer");
                 newUser.setMobileNo(mobno.getText().toString().trim());
                 newUser.setEmailId("test1");
-                newUser.setUserDietType("");
+                if(veg.isChecked())
+                    newUser.setUserDietType("Veg");
+                else if(nonveg.isChecked())
+                    newUser.setUserDietType("NonVeg");
+                else if(both.isChecked())
+                    newUser.setUserDietType("Both");
+                else
+                    newUser.setUserDietType("");
 
-
+                if(male.isChecked())
+                    newUser.setGender("Male");
+                else if(female.isChecked())
+                    newUser.setGender("Female");
+                else
+                    newUser.setGender("");
 
                 SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(SignUpActivity.this);
                 SharedPreferences.Editor edit = preferences.edit();

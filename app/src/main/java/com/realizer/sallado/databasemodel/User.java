@@ -19,6 +19,7 @@ public class User {
     public String emailId;
     public String userDietType;
     public boolean isFirstLogin;
+    public String gender;
 
     public String getUserId() {
         return userId;
@@ -100,4 +101,11 @@ public class User {
         isFirstLogin = firstLogin;
     }
 
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
 }

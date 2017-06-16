@@ -66,6 +66,7 @@ public class MonthlyDietActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MonthlyDietActivity.this, DietPlanListActivity.class);
+                intent.putExtra("From","Diet");
                 startActivity(intent);
             }
         });
