@@ -257,7 +257,7 @@ public class LoginActivity extends AppCompatActivity {
 
     public void userLogin(){
         if(fromWhere.equalsIgnoreCase("button")) {
-            if(mobileno.getText().toString().trim().length() >0 || mobileno.getText().toString().trim().length()<10) {
+            if(mobileno.getText().toString().trim().length() == 10) {
                 Query query = myRef.orderByChild("mobileNo").equalTo(mobileno.getText().toString().trim());
                 query.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override

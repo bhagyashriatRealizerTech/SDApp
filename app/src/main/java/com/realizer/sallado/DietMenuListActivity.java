@@ -42,6 +42,7 @@ public class DietMenuListActivity extends AppCompatActivity {
     DatabaseReference dishRef;
     List<DietMenuModel> orderedFoodList;
     ProgressWheel loading;
+    int counter= 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -238,8 +239,9 @@ public class DietMenuListActivity extends AppCompatActivity {
         }
     }
 
-    public void changeCount(int counter,int pric){
-        count.setText(""+counter+" Item in cart");
+    public void changeCount(int index,int pric){
+        counter = counter + 1;
+        count.setText(""+index+" Item in cart");
         price.setText("₹ "+pric);
     }
 

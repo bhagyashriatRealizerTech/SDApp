@@ -33,15 +33,15 @@ public class DietPlanChangeListAdapter extends BaseAdapter {
     private LayoutInflater layoutInflater;
     public View convertView;
     public  Context context;
-    List<Dish> dietList;
+    List<Dish> dietDishList;
     List<Boolean> isChecked;
 
     public DietPlanChangeListAdapter(List<Dish> dietList, Context context){
         this.context = context;
-        this.dietList = dietList;
+        this.dietDishList = dietList;
         layoutInflater =LayoutInflater.from(context);
         isChecked = new ArrayList<>();
-        for(int i=0;i <= this.dietList.size();i++)
+        for(int i=0;i<this.dietDishList.size();i++)
         {
             isChecked.add(false);
         }
@@ -49,12 +49,12 @@ public class DietPlanChangeListAdapter extends BaseAdapter {
     }
     @Override
     public int getCount() {
-        return dietList.size();
+        return dietDishList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return dietList.get(position);
+        return dietDishList.get(position);
     }
 
     @Override
@@ -88,13 +88,14 @@ public class DietPlanChangeListAdapter extends BaseAdapter {
         }
 
 
-        holder.title.setText(dietList.get(position).getDishName());
-        holder.desc.setText(dietList.get(position).getDishDescription());
+        holder.title.setText(dietDishList.get(position).getDishName());
+        holder.desc.setText(dietDishList.get(position).getDishDescription());
+
 
         holder.checkBox.setChecked(isChecked.get(position));
 
-        if(!dietList.get(position).getDishThumbnail().isEmpty()){
-            ImageStorage.setThumbnail(holder.imageView,dietList.get(position).getDishThumbnail());
+        if(!dietDishList.get(position).getDishThumbnail().isEmpty()){
+            ImageStorage.setThumbnail(holder.imageView,dietDishList.get(position).getDishThumbnail());
         }
 
         holder.root.setOnClickListener(new View.OnClickListener() {
@@ -110,7 +111,7 @@ public class DietPlanChangeListAdapter extends BaseAdapter {
                         if(i == pos) {
                             isChecked.set(i, true);
                             if(context instanceof DietChangePlanActivity)
-                                ((DietChangePlanActivity)context).setDish(dietList.get(pos).getDishId());
+                                ((DietChangePlanActivity)context).setDish(dietDishList.get(pos).getDishId());
                         }
                         else
                             isChecked.set(i,false);

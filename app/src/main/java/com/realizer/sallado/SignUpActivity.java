@@ -102,6 +102,7 @@ public class SignUpActivity extends AppCompatActivity {
                 newUser.setUserType("Customer");
                 newUser.setMobileNo(mobno.getText().toString().trim());
                 newUser.setEmailId("test1");
+
                 if(veg.isChecked())
                     newUser.setUserDietType("Veg");
                 else if(nonveg.isChecked())

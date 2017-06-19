@@ -86,7 +86,7 @@ public class DietChangePlanActivity extends AppCompatActivity {
                         dishList.add(dish);
                     }
 
-                    if(i == 0){
+                    if(dishGroup.getDishItems().size() == dishList.size()){
                         DietPlanChangeListAdapter dietPlanChangeListAdapter = new DietPlanChangeListAdapter(dishList,DietChangePlanActivity.this);
                         changeListView.setAdapter(dietPlanChangeListAdapter);
                         loading.setVisibility(View.GONE);

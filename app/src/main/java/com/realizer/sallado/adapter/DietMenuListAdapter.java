@@ -32,7 +32,7 @@ public class DietMenuListAdapter extends BaseAdapter {
     public View convertView;
     public  Context context;
     List<Dish> dietMenuList;
-    int totalCost = 0;
+    int totalCost = 0,count=0;
 
     public DietMenuListAdapter(List<Dish> dietMenuList, Context context){
         this.context = context;
@@ -125,7 +125,8 @@ public class DietMenuListAdapter extends BaseAdapter {
                 totalCost = totalCost + Integer.valueOf(dietMenuList.get(tempPosition).getDishPrice());
 
                 if(context instanceof DietMenuListActivity){
-                    ((DietMenuListActivity)context).changeCount(1,totalCost);
+                    count = count + 1;
+                    ((DietMenuListActivity)context).changeCount(count,totalCost);
                 }
 
                 DietMenuModel orderedFood = new DietMenuModel();
@@ -180,6 +181,7 @@ public class DietMenuListAdapter extends BaseAdapter {
                     }
 
                     totalCost = totalCost - Integer.valueOf(dietMenuList.get(tempPosition).getDishPrice());
+                    count = count - 1;
                 }
                 else {
                     counter = counter - 1;
@@ -197,11 +199,12 @@ public class DietMenuListAdapter extends BaseAdapter {
                     }
 
                     totalCost = totalCost - Integer.valueOf(dietMenuList.get(tempPosition).getDishPrice());
+                    count = count - 1;
                 }
 
 
                 if(context instanceof DietMenuListActivity){
-                    ((DietMenuListActivity)context).changeCount(counter,totalCost);
+                    ((DietMenuListActivity)context).changeCount(count,totalCost);
                 }
 
             }
@@ -227,9 +230,10 @@ public class DietMenuListAdapter extends BaseAdapter {
                 }
 
                 totalCost = totalCost + Integer.valueOf(dietMenuList.get(tempPosition).getDishPrice());
+                count = count + 1;
 
                 if(context instanceof DietMenuListActivity){
-                    ((DietMenuListActivity)context).changeCount(counter,totalCost);
+                    ((DietMenuListActivity)context).changeCount(count,totalCost);
                 }
             }
         });
