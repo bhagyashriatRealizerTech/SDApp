@@ -1,8 +1,10 @@
 package com.realizer.sallado;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
@@ -23,6 +25,7 @@ public class MyAccountActivity extends AppCompatActivity {
     TextView myPlan,myOrder,edit;
     ImageView userImage;
     LinearLayout info;
+    SharedPreferences preferences;
     Button done;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +34,7 @@ public class MyAccountActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setTitle(Constants.actionBarTitle("My Account", this));
+        preferences  = PreferenceManager.getDefaultSharedPreferences(MyAccountActivity.this);
         initiateView();
         setValue();
         getWindow().setSoftInputMode(
@@ -51,13 +55,10 @@ public class MyAccountActivity extends AppCompatActivity {
     }
 
     public void setValue(){
-
-
-
-        userName.setText("Vivaan Salgare");
-        userEmail.setText("vivaan.salgare@gmail.com");
-        userMobile.setText("9890174988");
-        userAddress.setText("A-601, Mega Center\nHadapsar, Pune\n411028");
+        userName.setText(preferences.getString("UserName",""));
+        userEmail.setText(preferences.getString("Email",""));
+        userMobile.setText(preferences.getString("MobNo",""));
+        userAddress.setText(preferences.getString("Address","A-601, Mega Center\nHadapsar, Pune\n411028"));
         myPlan.setText("My Monthly Plans");
         myOrder.setText("My Orders");
     }

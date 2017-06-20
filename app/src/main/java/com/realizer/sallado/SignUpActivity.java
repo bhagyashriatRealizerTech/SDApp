@@ -1,5 +1,6 @@
 package com.realizer.sallado;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -9,14 +10,17 @@ import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.facebook.CallbackManager;
@@ -36,6 +40,8 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.realizer.sallado.databasemodel.User;
+import com.realizer.sallado.utils.FontManager;
+import com.realizer.sallado.utils.Singleton;
 import com.realizer.sallado.view.ProgressWheel;
 
 import org.json.JSONException;
@@ -59,10 +65,12 @@ public class SignUpActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
+        if(Singleton.getDatabase() == null)
+            Singleton.setDatabase(FirebaseDatabase.getInstance());
 
-
-        database = FirebaseDatabase.getInstance();
+        database = Singleton.getDatabase();
         myRef = database.getReference("User");
+        myRef.keepSynced(true);
 
         setContentView(R.layout.signup_activity);
         initiateView();
@@ -101,7 +109,6 @@ public class SignUpActivity extends AppCompatActivity {
                 newUser.setFirstLogin(true);
                 newUser.setUserType("Customer");
                 newUser.setMobileNo(mobno.getText().toString().trim());
-                newUser.setEmailId("test1");
 
                 if(veg.isChecked())
                     newUser.setUserDietType("Veg");
@@ -125,6 +132,7 @@ public class SignUpActivity extends AppCompatActivity {
                 edit.putString("DietType",newUser.getUserDietType());
                 edit.putString("Email",newUser.getEmailId());
                 edit.putString("UserID",newUser.getUserId());
+                edit.putString("MobNo", newUser.getMobileNo());
                 edit.putString("IsLogin","true");
                 edit.commit();
 
@@ -144,9 +152,48 @@ public class SignUpActivity extends AppCompatActivity {
 
         loading.setVisibility(View.GONE);
 
-        Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
-        startActivity(intent);
-        finish();
+        alertDialog();
+
+    }
+
+    public  void alertDialog() {
+        LayoutInflater inflater = (LayoutInflater) getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+        View dialoglayout = inflater.inflate(R.layout.custom_dialogbox, null);
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(SignUpActivity.this);
+        builder.setView(dialoglayout);
+
+        Button buttonok= (Button) dialoglayout.findViewById(R.id.alert_btn_ok);
+        TextView titleName=(TextView) dialoglayout.findViewById(R.id.alert_dialog_title);
+        TextView alertMsg=(TextView) dialoglayout.findViewById(R.id.alert_dialog_message);
+        TextView close=(TextView) dialoglayout.findViewById(R.id.txt_close);
+        close.setTypeface(FontManager.getTypeface(SignUpActivity.this, FontManager.FONTAWESOME));
+
+        close.setVisibility(View.GONE);
+
+        final AlertDialog alertDialog = builder.create();
+
+        buttonok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+                alertDialog.dismiss();
+            }
+        });
+
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+
+        titleName.setText("SignUp");
+        alertMsg.setText("You are Registered Successfully\nEnjoy the healthy food.");
+        alertDialog.show();
+
     }
 
 

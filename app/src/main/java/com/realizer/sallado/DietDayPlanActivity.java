@@ -26,6 +26,7 @@ import com.realizer.sallado.databasemodel.Dish;
 import com.realizer.sallado.databasemodel.DishGroup;
 import com.realizer.sallado.model.DietPlanCalenderModel;
 import com.realizer.sallado.utils.Constants;
+import com.realizer.sallado.utils.FontManager;
 import com.realizer.sallado.utils.ImageStorage;
 import com.realizer.sallado.utils.Singleton;
 import com.realizer.sallado.view.ProgressWheel;
@@ -43,7 +44,8 @@ public class DietDayPlanActivity extends AppCompatActivity {
 
     public ImageView imgB,imgL,imgS,imgD;
     public TextView  txtB,txtL,txtS,txtD;
-    public TextView txtCb,txtCl,txtCs,txtCd;
+    public TextView  txtBdesc,txtLdesc,txtSdesc,txtDdesc;
+    public TextView txtCb,txtCl,txtCs,txtCd,txtClegend;
     LinearLayout layoutB,layoutL,layoutS,layoutD;
     DayProgram dayProgram;
     DatabaseReference dishRef,groupRef;
@@ -61,9 +63,13 @@ public class DietDayPlanActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         dayProgram = (DayProgram) getIntent().getSerializableExtra("DayPlan");
         actionBar.setTitle(Constants.actionBarTitle(dayProgram.getTitle(), DietDayPlanActivity.this));
-        database = FirebaseDatabase.getInstance();
+        if(Singleton.getDatabase() == null)
+            Singleton.setDatabase(FirebaseDatabase.getInstance());
+
+        database = Singleton.getDatabase();
         dishRef = database.getReference("Dish");
         groupRef = database.getReference("DishGroup");
+        groupRef.keepSynced(true);
         day = dayProgram.getDay();
         initiateView();
         loading.setVisibility(View.VISIBLE);
@@ -172,10 +178,16 @@ public class DietDayPlanActivity extends AppCompatActivity {
         txtS = (TextView) findViewById(R.id.txt_snacks);
         txtD = (TextView) findViewById(R.id.txt_dinner);
 
+        txtBdesc = (TextView) findViewById(R.id.txt_breakfastDesc);
+        txtLdesc = (TextView) findViewById(R.id.txt_lunchDesc);
+        txtSdesc = (TextView) findViewById(R.id.txt_snacksDesc);
+        txtDdesc = (TextView) findViewById(R.id.txt_dinnerDesc);
+
         txtCb = (TextView) findViewById(R.id.txt_changeB);
         txtCl = (TextView) findViewById(R.id.txt_changeL);
         txtCs = (TextView) findViewById(R.id.txt_changeS);
         txtCd = (TextView) findViewById(R.id.txt_changeD);
+        txtClegend = (TextView) findViewById(R.id.txt_change_legend);
 
         layoutB = (LinearLayout) findViewById(R.id.layout_breakfast);
         layoutL = (LinearLayout) findViewById(R.id.layout_lunch);
@@ -183,6 +195,12 @@ public class DietDayPlanActivity extends AppCompatActivity {
         layoutD = (LinearLayout) findViewById(R.id.layout_dinner);
 
         loading =(ProgressWheel) findViewById(R.id.loading);
+
+        txtCl.setTypeface(FontManager.getTypeface(this, FontManager.FONTAWESOME));
+        txtCb.setTypeface(FontManager.getTypeface(this, FontManager.FONTAWESOME));
+        txtCd.setTypeface(FontManager.getTypeface(this, FontManager.FONTAWESOME));
+        txtCs.setTypeface(FontManager.getTypeface(this, FontManager.FONTAWESOME));
+        txtClegend.setTypeface(FontManager.getTypeface(this, FontManager.FONTAWESOME));
 
 
         txtCb.setOnClickListener(new View.OnClickListener() {
@@ -226,7 +244,7 @@ public class DietDayPlanActivity extends AppCompatActivity {
         if(getIntent().getBooleanExtra("IsB",true)){
             layoutB.setVisibility(View.VISIBLE);
             Query query = dishRef.orderByChild("dishId").equalTo(bDishId);
-            setData(query,"Breakfast",txtB,imgB);
+            setData(query,"Breakfast",txtB,txtBdesc,imgB);
 
         }
         else {
@@ -236,7 +254,7 @@ public class DietDayPlanActivity extends AppCompatActivity {
         if(getIntent().getBooleanExtra("IsL",true)){
             layoutL.setVisibility(View.VISIBLE);
             Query query = dishRef.orderByChild("dishId").equalTo(lDishId);
-            setData(query,"Lunch",txtL,imgL);
+            setData(query,"Lunch",txtL,txtLdesc,imgL);
 
         }
         else {
@@ -247,7 +265,7 @@ public class DietDayPlanActivity extends AppCompatActivity {
         if(getIntent().getBooleanExtra("IsS",true)){
             layoutS.setVisibility(View.VISIBLE);
             Query query = dishRef.orderByChild("dishId").equalTo(sDishId);
-            setData(query,"Snacks",txtS,imgS);
+            setData(query,"Snacks",txtS,txtSdesc,imgS);
 
         }
         else {
@@ -257,7 +275,7 @@ public class DietDayPlanActivity extends AppCompatActivity {
         if(getIntent().getBooleanExtra("IsD",true)){
             layoutD.setVisibility(View.VISIBLE);
             Query query = dishRef.orderByChild("dishId").equalTo(dDishId);
-            setData(query,"Dinner",txtD,imgD);
+            setData(query,"Dinner",txtD,txtDdesc,imgD);
 
         }
         else {
@@ -267,7 +285,7 @@ public class DietDayPlanActivity extends AppCompatActivity {
 
     }
 
-    public void setData(Query query, final String type, final TextView textView, final ImageView imageView){
+    public void setData(Query query, final String type, final TextView textView, final TextView textViewDesc,final ImageView imageView){
 
         final StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD); // Span to make text bold
 
@@ -279,12 +297,14 @@ public class DietDayPlanActivity extends AppCompatActivity {
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         int end = 0;
                         Dish dish = snapshot.getValue(Dish.class);
-                        String bText = type+": "+dish.getDishName()+"\n"+dish.getDishContent();
+                        String bText = type+": "+dish.getDishName();
                         end = bText.split(":")[0].length();
 
                         final SpannableStringBuilder sb = new SpannableStringBuilder(bText);
                         sb.setSpan(bss, 0, end, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
                         textView.setText(sb);
+
+                        textViewDesc.setText(dish.getDishContent());
 
                         if(!dish.getDishThumbnail().isEmpty()){
                             ImageStorage.setThumbnail(imageView,dish.getDishThumbnail());

@@ -67,8 +67,13 @@
                 android:text=""
                 android:layout_marginBottom="7dp"
                 android:textSize="14sp"/>
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="0.6"
                 android:layout_height="wrap_content"
                 android:id="@+id/txt_ratings"
                 android:textColor="#01a400"
@@ -77,21 +82,25 @@
                 android:gravity="center_vertical"
                 android:drawablePadding="7dp"
                 android:drawableLeft="@drawable/thumbsup"/>
+            <Button
+                android:layout_width="0dp"
+                android:layout_weight="0.4"
+                android:layout_height="35dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:id="@+id/btn_book"
+                android:background="@drawable/square_background_curved"
+                android:text="Book"
+                android:textAllCaps="false"
+                android:textColor="#ffffff"
+                android:gravity="center"
+                android:textSize="16sp"/>
+            </LinearLayout>
     </LinearLayout>
+
 </LinearLayout>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="7dp"
-            android:layout_marginRight="7dp"
-            android:layout_marginTop="15dp"
-            android:padding="10dp"
-            android:textSize="14sp"
-            android:background="@drawable/layout_white_curved"
-            android:text=""
-            android:id="@+id/txt_description"
-            />
+
             <TextView
                 android:layout_width="70dp"
                 android:layout_height="wrap_content"
@@ -163,25 +172,24 @@
                     android:text=""
                     android:layout_marginBottom="7dp"
                     android:textSize="14sp"/>
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:id="@+id/btn_book"
-                    android:background="@drawable/square_background_curved"
-                    android:layout_marginRight="40dp"
-                    android:layout_marginLeft="40dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:text="Book Appointment"
-                    android:textAllCaps="false"
-                    android:textColor="#ffffff"
-                    android:gravity="center"
-                    android:textSize="16sp"/>
-            </LinearLayout>
 
+            </LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="7dp"
+                android:layout_marginRight="7dp"
+                android:layout_marginTop="15dp"
+                android:padding="10dp"
+                android:textSize="14sp"
+                android:background="@drawable/layout_white_curved"
+                android:text=""
+                android:id="@+id/txt_description"
+                />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
+
     <com.realizer.sallado.view.ProgressWheel
         android:id="@+id/loading"
         android:layout_width="100dp"

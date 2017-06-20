@@ -6,6 +6,7 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -21,6 +22,7 @@ import com.realizer.sallado.databasemodel.BookAppointment;
 import com.realizer.sallado.databasemodel.DoctorAvalability;
 import com.realizer.sallado.model.BookApointmentModel;
 import com.realizer.sallado.utils.Constants;
+import com.realizer.sallado.utils.Singleton;
 import com.realizer.sallado.view.ProgressWheel;
 
 import java.text.ParseException;
@@ -39,7 +41,6 @@ public class BookAppointmentActivity extends AppCompatActivity {
     List<DoctorAvalability> doctorAvalabilityList;
     FirebaseDatabase database;
     DatabaseReference appointmenteRef;
-    Button book;
     String userid,doctorid,slot,date;
     int globPos;
     ProgressWheel loading;
@@ -47,8 +48,12 @@ public class BookAppointmentActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        database = FirebaseDatabase.getInstance();
+        if(Singleton.getDatabase() == null)
+            Singleton.setDatabase(FirebaseDatabase.getInstance());
+
+        database = Singleton.getDatabase();
         appointmenteRef = database.getReference("DoctorAppintments");
+        appointmenteRef.keepSynced(true);
 
         setContentView(R.layout.book_appointment_layout);
         ActionBar actionBar = getSupportActionBar();
@@ -79,7 +84,6 @@ public class BookAppointmentActivity extends AppCompatActivity {
         days[5] = (TextView) findViewById(R.id.sat);
         days[6] = (TextView) findViewById(R.id.sun);
         noData = (TextView) findViewById(R.id.txt_noData);
-        book = (Button) findViewById(R.id.btn_book_appointment);
         loading =(ProgressWheel) findViewById(R.id.loading);
 
         slotGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -138,21 +142,24 @@ public class BookAppointmentActivity extends AppCompatActivity {
             }
         });
 
+    }
 
-        book.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DatabaseReference ref = appointmenteRef.push();
-                BookAppointment bookAppointment = new BookAppointment();
-                bookAppointment.setDate(date);
-                bookAppointment.setSlot(slot);
-                bookAppointment.setDoctorId(doctorid);
-                bookAppointment.setUserId(userid);
-                ref.setValue(bookAppointment);
-                Constants.alertDialog(BookAppointmentActivity.this, "Appointment", "Your Appointment Booked Successfully.You will received confirmation message on Your registered mobile number shortly");
-            }
-        });
-
+    public void bookAppointment(){
+        if(slot != null) {
+            DatabaseReference ref = appointmenteRef.push();
+            BookAppointment bookAppointment = new BookAppointment();
+            bookAppointment.setDate(date);
+            bookAppointment.setSlot(slot);
+            bookAppointment.setDoctorId(doctorid);
+            bookAppointment.setUserId(userid);
+            ref.setValue(bookAppointment);
+            loading.setVisibility(View.GONE);
+            Constants.alertDialog(BookAppointmentActivity.this, "Appointment", "Your Appointment Request accepted Successfully.\nYou will receive call from our team to confirm request on Your registered mobile number shortly.");
+        }
+        else {
+            loading.setVisibility(View.GONE);
+            Constants.alertDialog(BookAppointmentActivity.this, "Appointment","Please Select Time Slot");
+        }
     }
 
 
@@ -172,7 +179,7 @@ public class BookAppointmentActivity extends AppCompatActivity {
             slotGrid.setVisibility(View.VISIBLE);
             noData.setVisibility(View.GONE);
             BookAppointmentListAdapter bookAppointmentListAdapter =
-                    new BookAppointmentListAdapter(appoinmentList.get(position).getSlotList(), BookAppointmentActivity.this);
+            new BookAppointmentListAdapter(appoinmentList.get(position).getSlotList(), BookAppointmentActivity.this);
             slotGrid.setAdapter(bookAppointmentListAdapter);
         }
         else {
@@ -184,11 +191,22 @@ public class BookAppointmentActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main,menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 // app icon in action bar clicked; go home
                 finish();
+                return true;
+            case R.id.action_done:
+                // app icon in action bar clicked; go home
+                loading.setVisibility(View.VISIBLE);
+                bookAppointment();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

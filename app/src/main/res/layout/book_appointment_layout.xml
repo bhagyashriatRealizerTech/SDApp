@@ -7,13 +7,13 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/btn_book_appointment"
         android:layout_alignParentTop="true"
+        android:id="@+id/mainlayout"
         android:orientation="vertical">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Select Appintment Date and Time"
+            android:text="Select Appointment Date and Time"
             android:padding="7dp"
             android:gravity="center"
             android:textSize="18sp"/>
@@ -128,21 +128,6 @@
         android:layout_margin="10dp">
     </LinearLayout>
 
-    <GridView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/grid_slot"
-        android:background="#ffffff"
-        android:listSelector="@drawable/textselector"
-        android:choiceMode="singleChoice"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp"
-        android:paddingTop="3dp"
-        android:paddingLeft="3dp"
-        android:layout_above="@+id/layout_order"
-        android:numColumns="3">
-    </GridView>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -154,19 +139,28 @@
             android:visibility="gone"
             android:id="@+id/txt_noData"/>
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/mainlayout"
+        >
+        <GridView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:id="@+id/grid_slot"
+            android:background="#ffffff"
+            android:listSelector="@drawable/textselector"
+            android:choiceMode="singleChoice"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:paddingTop="3dp"
+            android:paddingLeft="3dp"
+            android:numColumns="3">
+        </GridView>
+    </LinearLayout>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:background="@drawable/square_background_curved"
-        android:text="Book"
-        android:textSize="18sp"
-        android:textColor="#ffffff"
-        android:textAllCaps="false"
-        android:id="@+id/btn_book_appointment"
-        android:layout_marginBottom="10dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
     <com.realizer.sallado.view.ProgressWheel
         android:id="@+id/loading"
         android:layout_width="100dp"

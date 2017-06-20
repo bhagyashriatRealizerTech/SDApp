@@ -8,6 +8,7 @@ import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.realizer.sallado.R;
@@ -176,11 +177,14 @@ public class Constants {
         final AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setView(dialoglayout);
 
+        RelativeLayout relativeLayout = (RelativeLayout) dialoglayout.findViewById(R.id.layout_buttton);
         Button buttonok= (Button) dialoglayout.findViewById(R.id.alert_btn_ok);
         TextView titleName=(TextView) dialoglayout.findViewById(R.id.alert_dialog_title);
         TextView alertMsg=(TextView) dialoglayout.findViewById(R.id.alert_dialog_message);
         TextView close=(TextView) dialoglayout.findViewById(R.id.txt_close);
         close.setTypeface(FontManager.getTypeface(context, FontManager.FONTAWESOME));
+
+        relativeLayout.setVisibility(View.GONE);
 
         final AlertDialog alertDialog = builder.create();
 

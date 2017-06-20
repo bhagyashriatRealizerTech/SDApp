@@ -49,7 +49,11 @@ public class DietChangePlanActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(Constants.actionBarTitle("Change Dish", DietChangePlanActivity.this));
         initiateView();
-        database = FirebaseDatabase.getInstance();
+        if(Singleton.getDatabase() == null)
+            Singleton.setDatabase(FirebaseDatabase.getInstance());
+
+        database = Singleton.getDatabase();
+
         dishRef = database.getReference("Dish");
         userDietRef = database.getReference("UserDietProgram");
         dishList = new ArrayList<>();

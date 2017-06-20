@@ -39,6 +39,7 @@ import com.realizer.sallado.databasemodel.UserDietProgram;
 import com.realizer.sallado.model.DietPlanCalenderModel;
 import com.realizer.sallado.utils.Constants;
 import com.realizer.sallado.utils.ImageStorage;
+import com.realizer.sallado.utils.Singleton;
 import com.realizer.sallado.view.ExpandableHeightGridView;
 import com.realizer.sallado.view.ProgressWheel;
 
@@ -74,7 +75,10 @@ public class DietPlanDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        database = FirebaseDatabase.getInstance();
+        if(Singleton.getDatabase() == null)
+            Singleton.setDatabase(FirebaseDatabase.getInstance());
+
+        database = Singleton.getDatabase();
         dishRef = database.getReference("Dish");
         DatabaseReference programRef = database.getReference("StandardDietProgram");
         userDietProgramRef = database.getReference("UserDietProgram");
@@ -342,6 +346,8 @@ public class DietPlanDetailActivity extends AppCompatActivity {
 
                 DatabaseReference ref = userDietProgramRef.push();
                 ref.setValue(userDietProgram);
+
+                Constants.alertDialog(DietPlanDetailActivity.this, "Book Plan", "You booked Plan Successfully.\nEnjoy the Healthy and Tasty Food");
 
             }
         });

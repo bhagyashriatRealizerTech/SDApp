@@ -36,6 +36,8 @@ public class DietDayProgramListAdapter extends BaseAdapter {
     Typeface face;
     String currentDate;
     boolean flag;
+    Date current,tempDate;
+    SimpleDateFormat  df = new SimpleDateFormat("dd MMM yyyy");
 
     public DietDayProgramListAdapter(List<DayProgram> dietList, Date startdate, Context context){
         this.context = context;
@@ -91,20 +93,30 @@ public class DietDayProgramListAdapter extends BaseAdapter {
             holder.date = (TextView) this.convertView.findViewById(R.id.txt_date);
             holder.done.setTypeface(face);
 
+            String temp = Constants.getMediumDate(calendar.getTime());
+            current = null;
+            tempDate = null;
+            try {
+                current = df.parse(currentDate);
+                tempDate = df.parse(holder.date.getText().toString());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
             holder.day.setText("Day "+dietList.get(position).getDay());
             holder.title.setText(dietList.get(position).getTitle());
             holder.desc.setText(dietList.get(position).getDesc());
-            holder.date.setText(Constants.getMediumDate(calendar.getTime()));
+            holder.date.setText(temp);
 
-            if(currentDate.equalsIgnoreCase(holder.date.getText().toString()))
-                flag = true;
-
-            if(flag)
-                holder.done.setVisibility(View.GONE);
-            else {
+            if(tempDate.before(current))
+            {
                 holder.done.setVisibility(View.VISIBLE);
                 holder.done.setText(R.string.fa_check_circle);
             }
+            else
+            {
+                holder.done.setVisibility(View.GONE);
+            }
+
 
             calendar.add(Calendar.DATE,1);
 

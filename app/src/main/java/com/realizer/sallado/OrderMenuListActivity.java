@@ -31,6 +31,7 @@ import com.realizer.sallado.databasemodel.OrderedFood;
 import com.realizer.sallado.databasemodel.User;
 import com.realizer.sallado.model.DietMenuModel;
 import com.realizer.sallado.utils.Constants;
+import com.realizer.sallado.utils.Singleton;
 import com.realizer.sallado.view.ProgressWheel;
 
 import java.text.SimpleDateFormat;
@@ -59,9 +60,14 @@ public class OrderMenuListActivity extends AppCompatActivity {
 
 
 
-        database = FirebaseDatabase.getInstance();
+        if(Singleton.getDatabase() == null)
+            Singleton.setDatabase(FirebaseDatabase.getInstance());
+
+        database = Singleton.getDatabase();
         orderRef = database.getReference("OrderFood");
         dishRef = database.getReference("Dish");
+
+        orderRef.keepSynced(true);
 
         setContentView(R.layout.order_menu_list_activity);
         ActionBar actionBar = getSupportActionBar();

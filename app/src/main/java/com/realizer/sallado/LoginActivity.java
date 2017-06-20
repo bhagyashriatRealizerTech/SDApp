@@ -52,6 +52,7 @@ import com.realizer.sallado.databasemodel.DishGroup;
 import com.realizer.sallado.databasemodel.DishGroupItem;
 import com.realizer.sallado.databasemodel.User;
 import com.realizer.sallado.utils.Constants;
+import com.realizer.sallado.utils.Singleton;
 import com.realizer.sallado.view.ProgressWheel;
 
 import org.json.JSONException;
@@ -88,8 +89,12 @@ public class LoginActivity extends AppCompatActivity {
         FacebookSdk.sdkInitialize(getApplicationContext());
         mFacebookCallbackManager = CallbackManager.Factory.create();
 
-        database = FirebaseDatabase.getInstance();
+        if(Singleton.getDatabase() == null)
+        Singleton.setDatabase(FirebaseDatabase.getInstance());
+
+        database = Singleton.getDatabase();
         myRef = database.getReference("User");
+        myRef.keepSynced(true);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -271,6 +276,7 @@ public class LoginActivity extends AppCompatActivity {
                                 edit.putString("UserName", user.getUserName());
                                 edit.putString("DietType", user.getUserDietType());
                                 edit.putString("Email", user.getEmailId());
+                                edit.putString("MobNo", user.getMobileNo());
                                 edit.putString("UserID", issue.getKey());
                                 edit.putString("IsLogin", "true");
                                 edit.apply();
@@ -283,7 +289,7 @@ public class LoginActivity extends AppCompatActivity {
                             finish();
                         } else {
                             loading.setVisibility(View.GONE);
-                            Constants.alertDialog(LoginActivity.this, "Login", "Invalid Credentials");
+                            Constants.alertDialog(LoginActivity.this, "Login", "Invalid Credentials\nPlease try again with valid credentials.\n");
                         }
 
                     }
@@ -296,7 +302,7 @@ public class LoginActivity extends AppCompatActivity {
             }
             else {
                 loading.setVisibility(View.GONE);
-                Constants.alertDialog(LoginActivity.this, "Login", "Please Enter valid Mobile Number");
+                Constants.alertDialog(LoginActivity.this, "Login", "Invalid Mobile Number.\nPlease Enter Valid Mobile Number\n");
             }
         }
         else {
@@ -314,6 +320,7 @@ public class LoginActivity extends AppCompatActivity {
                             edit.putString("UserName",user.getUserName());
                             edit.putString("DietType",user.getUserDietType());
                             edit.putString("Email",user.getEmailId());
+                            edit.putString("MobNo", user.getMobileNo());
                             edit.putString("UserID",issue.getKey());
                             edit.putString("IsLogin","true");
                             edit.apply();
@@ -342,6 +349,7 @@ public class LoginActivity extends AppCompatActivity {
                         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
                         SharedPreferences.Editor edit = preferences.edit();
                         edit.putString("UserName",newUser.getUserName());
+                        edit.putString("MobNo", newUser.getMobileNo());
                         edit.putString("DietType",newUser.getUserDietType());
                         edit.putString("Email",newUser.getEmailId());
                         edit.putString("IsLogin","true");

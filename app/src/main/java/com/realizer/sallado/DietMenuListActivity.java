@@ -27,6 +27,7 @@ import com.realizer.sallado.model.DietMenuModel;
 import com.realizer.sallado.model.DietPlanModel;
 import com.realizer.sallado.model.MedicalPanelListModel;
 import com.realizer.sallado.utils.Constants;
+import com.realizer.sallado.utils.Singleton;
 import com.realizer.sallado.view.ProgressWheel;
 
 import java.io.Serializable;
@@ -47,8 +48,12 @@ public class DietMenuListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        database = FirebaseDatabase.getInstance();
+        if(Singleton.getDatabase() == null)
+            Singleton.setDatabase(FirebaseDatabase.getInstance());
+
+        database = Singleton.getDatabase();
         dishRef = database.getReference("Dish");
+        dishRef.keepSynced(true);
 
         setContentView(R.layout.diet_menu_activity);
 

@@ -49,11 +49,12 @@
                     android:padding="3dp" />
                 <TextView
                     android:layout_width="0dp"
-                    android:layout_weight="0.6"
+                    android:layout_weight="0.5"
                     android:layout_height="wrap_content"
                     android:id="@+id/txt_date"
                     android:text="26 Aug 2017"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
+                    android:textStyle="italic"
                     android:padding="3dp" />
 
             </LinearLayout>

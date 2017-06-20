@@ -40,6 +40,7 @@
         android:layout_marginRight="10dp"/>
 
     <RelativeLayout
+        android:id="@+id/layout_buttton"
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:layout_marginTop="10dp"
@@ -47,13 +48,14 @@
         android:layout_marginRight="15dp"
         android:layout_marginBottom="10dp"
         android:orientation="horizontal"
-        android:visibility="gone"
-        android:weightSum="2">
+        android:layout_below="@+id/alert_dialog_message"
+        android:visibility="visible">
         <Button
             android:layout_width="80dp"
             android:layout_height="match_parent"
             android:id="@+id/alert_btn_ok"
             android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:background="@drawable/square_background_curved"
             android:textSize="16sp"
             android:text="Ok"
@@ -62,6 +64,6 @@
             android:layout_marginRight="5dp"
             android:layout_marginBottom="10dp"
             android:textColor="#fff"
-            android:layout_weight="1"/>
+            />
     </RelativeLayout>
 </RelativeLayout>

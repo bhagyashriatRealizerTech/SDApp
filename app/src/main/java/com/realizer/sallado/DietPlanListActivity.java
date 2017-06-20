@@ -57,7 +57,10 @@ public class DietPlanListActivity extends AppCompatActivity {
         dietProgramList = new ArrayList<>();
         userDietProgramList = new ArrayList<>();
 
-        database = FirebaseDatabase.getInstance();
+        if(Singleton.getDatabase() == null)
+            Singleton.setDatabase(FirebaseDatabase.getInstance());
+
+        database = Singleton.getDatabase();
 
         loading.setVisibility(View.VISIBLE);
 
@@ -67,6 +70,7 @@ public class DietPlanListActivity extends AppCompatActivity {
 
             actionBar.setTitle(Constants.actionBarTitle("Diet Program", this));
             dietProgramRef = database.getReference("StandardDietProgram");
+            dietProgramRef.keepSynced(true);
             dietProgramRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -163,6 +167,7 @@ public class DietPlanListActivity extends AppCompatActivity {
     public void setData(){
 
         dietProgramRef = database.getReference("UserDietProgram");
+        dietProgramRef.keepSynced(true);
         String userid = PreferenceManager.getDefaultSharedPreferences(DietPlanListActivity.this).getString("UserID","");
         Query query = dietProgramRef.orderByChild("userId").equalTo(userid);
         query.addValueEventListener(new ValueEventListener() {

@@ -1,5 +1,6 @@
 package com.realizer.sallado.utils;
 
+import com.google.firebase.database.FirebaseDatabase;
 import com.realizer.sallado.databasemodel.UserDietProgram;
 
 /**
@@ -12,6 +13,7 @@ public class Singleton {
     public static boolean isDayListChange =false;
     public static boolean isDietProgramChange = false;
     public static UserDietProgram userDietProgram;
+    public static FirebaseDatabase database = null;
 
     private Singleton(){
 
@@ -56,5 +58,18 @@ public class Singleton {
 
     public static void setIsDietProgramChange(boolean isDietProgramChange) {
         Singleton.isDietProgramChange = isDietProgramChange;
+    }
+
+    public static FirebaseDatabase getDatabase() {
+        return database;
+    }
+
+    public static void setDatabase(FirebaseDatabase database) {
+        boolean flag = false;
+        if(Singleton.database == null)
+            flag = true;
+        Singleton.database = database;
+        if(flag)
+        Singleton.database.setPersistenceEnabled(true);
     }
 }

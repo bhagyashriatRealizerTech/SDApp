@@ -10,11 +10,14 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.realizer.sallado.adapter.DietDayProgramListAdapter;
 import com.realizer.sallado.databasemodel.DayProgram;
 import com.realizer.sallado.utils.Constants;
+import com.realizer.sallado.utils.FontManager;
 import com.realizer.sallado.utils.Singleton;
 
 import java.io.Serializable;
@@ -36,6 +39,8 @@ public class DietDayPlanListActivity extends AppCompatActivity {
     Date inputDate;
     String programID,startdate;
     SimpleDateFormat simpleDateFormat;
+    LinearLayout layoutLegend;
+    TextView legend;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,6 +77,10 @@ public class DietDayPlanListActivity extends AppCompatActivity {
     public void initiateView(){
 
         dayListView = (ListView) findViewById(R.id.doctorlistlayout);
+        layoutLegend = (LinearLayout) findViewById(R.id.layoutbottom);
+        legend = (TextView) findViewById(R.id.txt_change_legend);
+        layoutLegend.setVisibility(View.VISIBLE);
+        legend.setTypeface(FontManager.getTypeface(this, FontManager.FONTAWESOME));
 
         dayListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

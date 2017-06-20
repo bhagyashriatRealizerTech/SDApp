@@ -26,6 +26,7 @@ import com.realizer.sallado.databasemodel.MedicalPanel;
 import com.realizer.sallado.model.DoctorListModel;
 import com.realizer.sallado.model.MedicalPanelListModel;
 import com.realizer.sallado.utils.Constants;
+import com.realizer.sallado.utils.Singleton;
 import com.realizer.sallado.view.ProgressWheel;
 
 import java.util.ArrayList;
@@ -43,8 +44,12 @@ public class  DoctorlistActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        database = FirebaseDatabase.getInstance();
+        if(Singleton.getDatabase() == null)
+            Singleton.setDatabase(FirebaseDatabase.getInstance());
+
+        database = Singleton.getDatabase();
         medicalPanelRef = database.getReference("MedicalPanelData");
+        medicalPanelRef.keepSynced(true);
 
         String type = getIntent().getStringExtra("DoctorType");
         setContentView(R.layout.doctor_list_activity);

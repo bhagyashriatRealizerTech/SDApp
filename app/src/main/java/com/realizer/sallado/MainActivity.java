@@ -33,6 +33,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.realizer.sallado.databasemodel.User;
 import com.realizer.sallado.utils.Constants;
+import com.realizer.sallado.utils.Singleton;
 
 import java.io.ByteArrayOutputStream;
 
@@ -56,12 +57,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        database = FirebaseDatabase.getInstance();
+        if(Singleton.getDatabase() == null)
+            Singleton.setDatabase(FirebaseDatabase.getInstance());
+
+        database = Singleton.getDatabase();
         myRef = database.getReference("User");
         storage = FirebaseStorage.getInstance();
 
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle(Constants.actionBarTitle("Healthy Lifestyle", this));
+        actionBar.setTitle(Constants.actionBarTitle("Sallado", this));
         setContentView(R.layout.dashboard_activity);
         initiateView();
 
