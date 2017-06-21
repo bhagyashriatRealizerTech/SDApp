@@ -16,7 +16,7 @@
         android:orientation="horizontal">
         <TextView
             android:layout_width="0dp"
-            android:layout_weight="0.3"
+            android:layout_weight="0.4"
             android:layout_height="wrap_content"
             android:id="@+id/txt_price"
             android:text="₹ 1799"
@@ -24,7 +24,7 @@
             android:padding="3dp" />
         <TextView
             android:layout_width="0dp"
-            android:layout_weight="0.3"
+            android:layout_weight="0.6"
             android:layout_height="wrap_content"
             android:id="@+id/txt_date"
             android:text="26 Aug 2017"

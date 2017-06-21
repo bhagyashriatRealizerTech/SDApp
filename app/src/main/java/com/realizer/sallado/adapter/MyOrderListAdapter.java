@@ -92,7 +92,12 @@ public class MyOrderListAdapter extends BaseAdapter {
                 else
                     title = title + orderFoods.get(position).getOrderedFood().get(i).getDishName()+"("+orderFoods.get(position).getOrderedFood().get(i).getDishQuantity()+"), ";
             }
-            holder.day.setText(orderFoods.get(position).getOrderDate().split(" ")[0]);
+            String [] dateTimeArr = orderFoods.get(position).getOrderDate().split(" ");
+            if(dateTimeArr.length >2)
+            holder.day.setText(Constants.getMedDate(dateTimeArr[0])+", "+dateTimeArr[1]+" "+dateTimeArr[2]);
+            else
+            holder.day.setText(Constants.getMedDate(dateTimeArr[0]));
+
             holder.name.setText(title);
             holder.price.setText("₹ "+orderFoods.get(position).getOrderTotalPrice());
 

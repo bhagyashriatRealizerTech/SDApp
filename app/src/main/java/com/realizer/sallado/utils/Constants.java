@@ -118,6 +118,21 @@ public class Constants {
         return outdate;
     }
 
+    public static String getMedDate(String date){
+        String outdate="";
+        SimpleDateFormat input = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat output = new SimpleDateFormat("dd MMM");
+
+        try {
+            Date date1 = input.parse(date);
+            outdate = output.format(date1);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        //outdate = output.format(date);
+        return outdate;
+    }
+
     public static String getDayOfWeek(int day){
         switch (day) {
             case Calendar.SUNDAY:

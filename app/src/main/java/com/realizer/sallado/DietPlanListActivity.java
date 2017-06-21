@@ -107,61 +107,6 @@ public class DietPlanListActivity extends AppCompatActivity {
         }
 
 
-
-
-/*
-        List<DayProgram> dayProgramList = new ArrayList<>();
-        for(int i=0;i<15;i++){
-            DayProgram dayProgram = new DayProgram();
-            dayProgram.setDay(""+(i+1));
-            dayProgram.setBreakfastDishID("f1a01156-3fba-11e7-a919-92ebcb67fe33");
-            dayProgram.setLunchDishID("f1a01494-3fba-11e7-a919-92ebcb67fe33");
-            dayProgram.setSnacksDishId("f1a0178c-3fba-11e7-a919-92ebcb67fe33");
-            dayProgram.setDinnerDishId("f1a0191c-3fba-11e7-a919-92ebcb67fe33");
-
-            dayProgramList.add(dayProgram);
-        }
-
-        DietProgram dietProgram = new DietProgram();
-        dietProgram.setCustomized(true);
-        dietProgram.setDayProgram(dayProgramList);
-        dietProgram.setProgramDescription("If you’re trying to lose weight and keep it off, you’ve come to the right place. We’ve got recipes for breakfast, lunch, dinner and snacks (plus dessert) that fit into your diet. Plus, get tips for overcoming your biggest diet challenges to lose weight successfully. Find the Right Calorie Level and Diet Meal Plan for You »");
-        dietProgram.setProgramId(UUID.randomUUID().toString());
-        dietProgram.setProgramName("Weight Loss");
-        dietProgram.setProgramPrice("₹ 2500/M");
-        dietProgram.setProgramRatings("99%");
-        dietProgram.setProgramThumbnailUrl("http://www.rd.com/wp-content/uploads/sites/2/2012/03/13-things-weight-loss-experts-05-diet-exercise-sl.jpg");
-        dietProgram.setProgramType("Dietitian");
-        dietProgram.setProgramDays(dayProgramList.size());
-
-        DatabaseReference ref = dietProgramRef.push();
-        ref.setValue(dietProgram);*/
-       /* dietPlanModels = new ArrayList<>();
-
-        DietPlanModel diet = new DietPlanModel();
-        diet.setDietName("Weight Gain");
-        diet.setDietPrice("2000/M INR");
-        diet.setDietRatings("99%");
-        diet.setDietIncludes("Breakfast, Lunch, Dinner");
-        dietPlanModels.add(diet);
-
-        DietPlanModel diet1 = new DietPlanModel();
-        diet1.setDietName("Weight Loss");
-        diet1.setDietPrice("2500/M INR");
-        diet1.setDietRatings("100%");
-        diet1.setDietIncludes("Breakfast, Lunch, Dinner");
-        dietPlanModels.add(diet1);
-
-        DietPlanModel diet2 = new DietPlanModel();
-        diet2.setDietName("Athelatic");
-        diet2.setDietPrice("3000/M INR");
-        diet2.setDietRatings("99%");
-        diet2.setDietIncludes("Breakfast, Lunch, Dinner");
-        dietPlanModels.add(diet2);*/
-
-
-
-
     }
 
     public void setData(){
