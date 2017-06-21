@@ -44,6 +44,7 @@ public class DietMenuListActivity extends AppCompatActivity {
     List<DietMenuModel> orderedFoodList;
     ProgressWheel loading;
     int counter= 0;
+    String from;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,93 +65,15 @@ public class DietMenuListActivity extends AppCompatActivity {
 
         dietMenuModels = new ArrayList<>();
         orderedFoodList = new ArrayList<>();
-
-/*
-        Dish diet = new Dish();
-        diet.setDishName("Roasted Vegetable Medley");
-        diet.setDishPrice("150");
-        diet.setDishRatings("99%");
-        diet.setDishType("Veg");
-        diet.setDishContent("1");
-        diet.setDishDescription("1");
-        diet.setDishId("1");
-        diet.setDishIngredients("1");
-        diet.setFoodPreparationTime("1");
-        diet.setDishThumbnail("http://cdn.hercampus.com/s3fs-public/styles/full_width_embed/public/2016/02/12/Roasted-Vegetables-with-Fresh-Herbs-3862-640x428.jpg");
-        dietMenuModels.add(diet);
-
-        Dish diet1 = new Dish();
-        diet1.setDishName("Herbed Chiken");
-        diet1.setDishPrice("200");
-        diet1.setDishRatings("95%");
-        diet1.setDishType("NonVeg");
-        diet1.setDishContent("1");
-        diet1.setDishDescription("1");
-        diet1.setDishId("1");
-        diet1.setDishIngredients("1");
-        diet1.setFoodPreparationTime("1");
-        diet1.setDishThumbnail("http://www.recipehearth.com/wp-content/uploads/2013/09/fc86in001-03_xlg.jpg");
-        dietMenuModels.add(diet1);
-
-        Dish diet2 = new Dish();
-        diet2.setDishName("Pork Chops");
-        diet2.setDishPrice("350");
-        diet2.setDishRatings("99%");
-        diet2.setDishType("NonVeg");
-        diet2.setDishContent("1");
-        diet2.setDishDescription("1");
-        diet2.setDishId("1");
-        diet2.setDishIngredients("1");
-        diet2.setFoodPreparationTime("1");
-        diet2.setDishThumbnail("https://images-gmi-pmc.edge-generalmills.com/b7d13b4b-ce88-4149-80b8-52630d8c2318.jpg");
-        dietMenuModels.add(diet2);
-
-        Dish diet3 = new Dish();
-        diet3.setDishName("Carrot Oatmeal Kebab");
-        diet3.setDishPrice("200");
-        diet3.setDishRatings("99%");
-        diet3.setDishType("Veg");
-        diet3.setDishContent("1");
-        diet3.setDishDescription("1");
-        diet3.setDishId("1");
-        diet3.setDishIngredients("1");
-        diet3.setFoodPreparationTime("1");
-        diet3.setDishThumbnail("https://s-media-cache-ak0.pinimg.com/600x315/a9/82/2f/a9822f217a7eeb0cbbc31f47dae760b2.jpg");
-        dietMenuModels.add(diet3);
-
-        Dish diet0 = new Dish();
-        diet0.setDishName("Biryani with Cashews");
-        diet0.setDishPrice("250");
-        diet0.setDishRatings("99%");
-        diet0.setDishType("Veg");
-        diet0.setDishContent("1");
-        diet0.setDishDescription("1");
-        diet0.setDishId("1");
-        diet0.setDishIngredients("1");
-        diet0.setFoodPreparationTime("1");
-        diet0.setDishThumbnail("http://www.vegrecipesofindia.com/wp-content/uploads/2015/12/mughlai-veg-biryani-recipe40.jpg");
-        dietMenuModels.add(diet0);
-
-        Dish diet5 = new Dish();
-        diet5.setDishName("Backed Chicken Nuggets");
-        diet5.setDishPrice("180");
-        diet5.setDishRatings("99%");
-        diet5.setDishType("NonVeg");
-        diet5.setDishContent("1");
-        diet5.setDishDescription("1");
-        diet5.setDishId("1");
-        diet5.setDishIngredients("1");
-        diet5.setFoodPreparationTime("1");
-        diet5.setDishThumbnail("http://crescenthalal.com/wp-content/uploads/2014/01/crunchy-chicken-nugget-recipe-photo-420x420.jpg");
-        dietMenuModels.add(diet5);
-
-        for(int i=0;i<dietMenuModels.size();i++){
-            DatabaseReference ref = dishRef.push();
-            ref.setValue(dietMenuModels.get(i));
-        }*/
-
-
         loading.setVisibility(View.VISIBLE);
+        from = getIntent().getStringExtra("FromWhere");
+
+        if(from != null){
+            if(from.equalsIgnoreCase("DC"))
+                Constants.alertDialog(DietMenuListActivity.this,"Information","We don not promote drinking alcoholic beverages." +
+                        "\nHow ever in order to reduce side effects of salty foods(Chakhna) consumed along with alcoholic beverages." +
+                        "\nWe do suggest to have these healthy alternatives.");
+        }
 
         dishRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -222,6 +145,7 @@ public class DietMenuListActivity extends AppCompatActivity {
                 if(orderedFoodList.size()>0) {
                     Intent intent = new Intent(DietMenuListActivity.this, OrderMenuListActivity.class);
                     intent.putExtra("OrderedFood", (Serializable) orderedFoodList);
+                    intent.putExtra("FromWhere","MenuLIst");
                     intent.putExtra("TotalPrice", price.getText());
                     startActivity(intent);
                 }

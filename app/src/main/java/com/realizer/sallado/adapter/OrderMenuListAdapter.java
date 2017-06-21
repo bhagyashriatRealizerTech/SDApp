@@ -32,12 +32,14 @@ public class OrderMenuListAdapter extends BaseAdapter {
     public  Context context;
     List<DietMenuModel> dietMenuList;
     int totalCost = 0;
+    String from;
 
-    public OrderMenuListAdapter(List<DietMenuModel> dietMenuList, Context context,int totalcost){
+    public OrderMenuListAdapter(List<DietMenuModel> dietMenuList, Context context,int totalcost,String from){
         this.context = context;
         this.dietMenuList = dietMenuList;
         layoutInflater =LayoutInflater.from(context);
         this.totalCost = totalcost;
+        this.from = from;
     }
     @Override
     public int getCount() {
@@ -111,6 +113,10 @@ public class OrderMenuListAdapter extends BaseAdapter {
             holder = (ViewHolder) this.convertView.getTag();
         }
 
+        if(from.equalsIgnoreCase("MyOrder")){
+            holder.plus.setEnabled(false);
+            holder.minus.setEnabled(false);
+        }
 
         holder.minus.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,7 +136,7 @@ public class OrderMenuListAdapter extends BaseAdapter {
                     holder.count.setText(""+counter);
 
                     dietMenuList.get(tempPosition).setQuantity(""+counter);
-                    if(context instanceof DietMenuListActivity){
+                    if(context instanceof OrderMenuListActivity){
                         ((OrderMenuListActivity)context).orderItem(dietMenuList.get(tempPosition),"update");
                     }
 
@@ -142,7 +148,7 @@ public class OrderMenuListAdapter extends BaseAdapter {
                     holder.count.setText(""+counter);
 
                     dietMenuList.get(tempPosition).setQuantity(""+counter);
-                    if(context instanceof DietMenuListActivity){
+                    if(context instanceof OrderMenuListActivity){
                         ((OrderMenuListActivity)context).orderItem(dietMenuList.get(tempPosition),"update");
                     }
 
@@ -160,14 +166,19 @@ public class OrderMenuListAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 int tempPosition = (Integer) v.getTag();
+                String type = "update";
+
                 int counter = Integer.valueOf(holder.count.getText().toString());
+                if(counter == 0)
+                    type = "update";
+
                     counter = counter + 1;
                     holder.count.setText(""+counter);
                 holder.menupPrice.setText("₹ "+(Integer.valueOf(dietMenuList.get(tempPosition).getMenuPrice()) * counter));
 
                 dietMenuList.get(tempPosition).setQuantity(""+counter);
                 if(context instanceof DietMenuListActivity){
-                    ((OrderMenuListActivity)context).orderItem(dietMenuList.get(tempPosition),"update");
+                    ((OrderMenuListActivity)context).orderItem(dietMenuList.get(tempPosition),type);
                 }
 
                 totalCost = totalCost + Integer.valueOf(dietMenuList.get(tempPosition).getMenuPrice());

@@ -77,11 +77,6 @@ public class  DoctorlistActivity extends AppCompatActivity {
                     doctorListModels.clear();
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         MedicalPanelListModel medicalPanelListModel = snapshot.getValue(MedicalPanelListModel.class);
-                        /*medicalPanelListModel.setMedicalPanel(medicalPanelListModel.getMedicalPanel());
-                        medicalPanelListModel.setDoctorAvalabilities(medicalPanelListModel.getDoctorAvalabilities());
-                        medicalPanelListModel.setDoctorHolidays(medicalPanelListModel.getDoctorHolidays());
-                        medicalPanelListModel.setDoctorLocations(medicalPanelListModel.getDoctorLocations());
-                        medicalPanelListModel.setDoctorType(medicalPanelListModel.getDoctorType());*/
                         medicalPanelListModel.setKey(snapshot.getKey());
                         doctorListModels.add(medicalPanelListModel);
                     }

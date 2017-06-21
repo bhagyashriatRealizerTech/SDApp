@@ -79,6 +79,9 @@
 
         <activity android:name=".DietChangePlanActivity"
             android:screenOrientation="portrait"/>
+
+        <activity android:name=".MyOrderActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

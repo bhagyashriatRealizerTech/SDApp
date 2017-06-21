@@ -93,6 +93,14 @@ public class MyAccountActivity extends AppCompatActivity {
                 enableDisable(false);
             }
         });
+
+        myOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MyAccountActivity.this, MyOrderActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     public void enableDisable(boolean value){

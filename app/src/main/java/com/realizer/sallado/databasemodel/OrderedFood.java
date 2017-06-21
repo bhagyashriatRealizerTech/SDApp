@@ -10,6 +10,7 @@ public class OrderedFood implements Serializable{
 
     public String dishId;
     public String dishQuantity;
+    public String dishName;
     public String getDishId() {
         return dishId;
     }
@@ -24,5 +25,13 @@ public class OrderedFood implements Serializable{
 
     public void setDishQuantity(String dishQuantity) {
         this.dishQuantity = dishQuantity;
+    }
+
+    public String getDishName() {
+        return dishName;
+    }
+
+    public void setDishName(String dishName) {
+        this.dishName = dishName;
     }
 }

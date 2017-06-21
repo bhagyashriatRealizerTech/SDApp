@@ -1,12 +1,13 @@
 package com.realizer.sallado.databasemodel;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by Win on 24-05-2017.
  */
 
-public class OrderFood {
+public class OrderFood implements Serializable{
 
     public String orderDate;
     public String orderId;

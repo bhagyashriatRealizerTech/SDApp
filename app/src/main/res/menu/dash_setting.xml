@@ -15,6 +15,11 @@
                 android:orderInCategory="100"
                 android:title="My Account"
                 />
+            <item
+                android:id="@+id/user_order"
+                android:orderInCategory="100"
+                android:title="My Orders"
+                />
                <item android:id="@+id/about_us"
                 android:orderInCategory="100"
                 android:title="About"
