@@ -106,10 +106,6 @@ public class OrderMenuListActivity extends AppCompatActivity {
             loading.setVisibility(View.GONE);
         }
 
-
-        String addres = PreferenceManager.getDefaultSharedPreferences(OrderMenuListActivity.this).getString("Address", "A-601, Mega Center\n" +
-                "Hadapsar, Pune");
-        address.setText(addres);
         price.setText("₹ "+total+"\nTax: ₹ 67\nGrandTotal:  ₹ "+(total+67));
 
 
@@ -169,7 +165,7 @@ public class OrderMenuListActivity extends AppCompatActivity {
         proceed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (dietMenuModels.size() > 1) {
+                if (dietMenuModels.size() > 0) {
                     loading.setVisibility(View.VISIBLE);
                     for (int i = 0; i < dietMenuModels.size(); i++) {
                         if(Integer.valueOf(dietMenuModels.get(i).getQuantity()) > 0) {
@@ -205,6 +201,14 @@ public class OrderMenuListActivity extends AppCompatActivity {
                 }
             }
 
+        });
+
+        address.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(OrderMenuListActivity.this,MyAddressActivity.class);
+                startActivity(intent);
+            }
         });
 
 
@@ -254,6 +258,11 @@ public class OrderMenuListActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        String addres = PreferenceManager.getDefaultSharedPreferences(OrderMenuListActivity.this).getString("Address", "");
+        if(addres.length()<=0)
+            address.setText("Tap Here To Add Address");
+        else
+            address.setText(addres);
     }
 
     @Override

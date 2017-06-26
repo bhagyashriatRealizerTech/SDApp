@@ -31,12 +31,6 @@ public class GetImages extends AsyncTask<Object, Object, Object> {
             URL url = new URL(requestUrl);
             URLConnection conn = url.openConnection();
             bitmap = BitmapFactory.decodeStream(conn.getInputStream());
-            /*URL url = new URL(requestUrl);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoInput(true);
-            connection.connect();
-            InputStream input = connection.getInputStream();
-            bitmap = BitmapFactory.decodeStream(input);*/
         } catch (Exception ex) {
             Log.d("log",ex.toString());
         }

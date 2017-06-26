@@ -1,5 +1,6 @@
 package com.realizer.sallado;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,6 +19,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -48,6 +50,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 public class DietPlanDetailActivity extends AppCompatActivity {
@@ -71,6 +74,9 @@ public class DietPlanDetailActivity extends AppCompatActivity {
     Button book_plan;
     String userId;
     ActionBar actionBar;
+    DatePickerDialog.OnDateSetListener date;
+    Calendar myCalendar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,6 +102,20 @@ public class DietPlanDetailActivity extends AppCompatActivity {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         loading.setVisibility(View.VISIBLE);
+
+        myCalendar = Calendar.getInstance();
+        date = new DatePickerDialog.OnDateSetListener() {
+
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                  int dayOfMonth) {
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH, monthOfYear);
+                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                upDateLable();
+            }
+
+        };
 
         Query query = programRef.orderByChild("programId").equalTo(programId);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -328,29 +348,44 @@ public class DietPlanDetailActivity extends AppCompatActivity {
         book_plan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                Date d = new Date();
-                SimpleDateFormat simpleDateFormat  = new SimpleDateFormat("dd/MM/yyyy");
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(d);
-                calendar.add(Calendar.DATE,1);
-                String startDate = simpleDateFormat.format(calendar.getTime());
-                calendar.add(Calendar.DATE,15);
-                String endDate = simpleDateFormat.format(calendar.getTime());
-
-                UserDietProgram userDietProgram = new UserDietProgram();
-                userDietProgram.setUserId(userId);
-                userDietProgram.setDietProgram(dietProgram);
-                userDietProgram.setStartDate(startDate);
-                userDietProgram.setEndDate(endDate);
-
-                DatabaseReference ref = userDietProgramRef.push();
-                ref.setValue(userDietProgram);
-
-                Constants.alertDialog(DietPlanDetailActivity.this, "Book Plan", "You booked Plan Successfully.\nEnjoy the Healthy and Tasty Food");
-
+                planClick();
             }
         });
+    }
+    public final void planClick( ) {
+        Calendar c = Calendar.getInstance();
+        int year = c.get(Calendar.YEAR);
+        int month = c.get(Calendar.MONTH);
+        int day = c.get(Calendar.DAY_OF_MONTH);
+        DatePickerDialog datePickerDialog = new DatePickerDialog(DietPlanDetailActivity.this, date, year, month, day);
+        Calendar calendar = new GregorianCalendar();
+        calendar.set(Calendar.DAY_OF_MONTH, day+1);
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.YEAR, year);
+        datePickerDialog.getDatePicker().setMinDate(calendar.getTimeInMillis());
+        datePickerDialog.show();
+    }
+
+    public void upDateLable(){
+
+        Date d = myCalendar.getTime();
+        SimpleDateFormat simpleDateFormat  = new SimpleDateFormat("dd/MM/yyyy");
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(d);
+        String startDate = simpleDateFormat.format(calendar.getTime());
+        calendar.add(Calendar.DATE,dietProgram.getProgramDays());
+        String endDate = simpleDateFormat.format(calendar.getTime());
+
+        UserDietProgram userDietProgram = new UserDietProgram();
+        userDietProgram.setUserId(userId);
+        userDietProgram.setDietProgram(dietProgram);
+        userDietProgram.setStartDate(startDate);
+        userDietProgram.setEndDate(endDate);
+
+        DatabaseReference ref = userDietProgramRef.push();
+        ref.setValue(userDietProgram);
+
+        Constants.alertDialog(DietPlanDetailActivity.this, "Book Plan", "You booked Plan Successfully.\nEnjoy the Healthy and Tasty Food");
     }
 
     @Override

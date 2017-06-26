@@ -1,7 +1,10 @@
 package com.realizer.sallado.utils;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v7.app.AlertDialog;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -36,6 +39,30 @@ public class Constants {
         Typeface face= Typeface.createFromAsset(context.getAssets(), "fonts/font.ttf");
         s.setSpan(new CustomTypefaceSpan("", face), 0, s.length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
         return s;
+    }
+
+    public static boolean isConnectingToInternet(Context context){
+        // get Connectivity Manager object to check connection
+        ConnectivityManager connec
+                =(ConnectivityManager) context.getSystemService(
+                Context.CONNECTIVITY_SERVICE);
+
+        // Check for network connections
+        if ( connec.getNetworkInfo(0).getState() == NetworkInfo.State.CONNECTED ||
+                connec.getNetworkInfo(0).getState() == NetworkInfo.State.CONNECTING ||
+                connec.getNetworkInfo(1).getState() == NetworkInfo.State.CONNECTING ||
+                connec.getNetworkInfo(1).getState() == NetworkInfo.State.CONNECTED ) {
+            //  Toast.makeText(context, " Connected ", Toast.LENGTH_LONG).show();
+            return true;
+        }else if (
+                connec.getNetworkInfo(0).getState() ==
+                        NetworkInfo.State.DISCONNECTED ||
+                        connec.getNetworkInfo(1).getState() ==
+                                NetworkInfo.State.DISCONNECTED  ) {
+            //Toast.makeText(context, " Not Connected ", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        return false;
     }
 
     public static Date convertTime(String time){
@@ -219,6 +246,49 @@ public class Constants {
 
         titleName.setText(title);
         alertMsg.setText(message);
+
+        alertDialog.show();
+
+    }
+
+    public static void redAlertDialog(final Context context, String title, String message,String messagetwo) {
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+        View dialoglayout = inflater.inflate(R.layout.custom_dialogbox_info, null);
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setView(dialoglayout);
+
+        RelativeLayout relativeLayout = (RelativeLayout) dialoglayout.findViewById(R.id.layout_buttton);
+        Button buttonok= (Button) dialoglayout.findViewById(R.id.alert_btn_ok);
+        TextView titleName=(TextView) dialoglayout.findViewById(R.id.alert_dialog_title);
+        TextView alertMsg=(TextView) dialoglayout.findViewById(R.id.alert_dialog_message);
+        TextView alertMsgTwo=(TextView) dialoglayout.findViewById(R.id.alert_dialog_message_two);
+        TextView close=(TextView) dialoglayout.findViewById(R.id.txt_close);
+        close.setTypeface(FontManager.getTypeface(context, FontManager.FONTAWESOME));
+
+        relativeLayout.setVisibility(View.GONE);
+
+        final AlertDialog alertDialog = builder.create();
+
+        buttonok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+
+        titleName.setBackgroundColor(Color.RED);
+
+        titleName.setText(title);
+        alertMsg.setText(message);
+        alertMsgTwo.setText(messagetwo);
 
         alertDialog.show();
 

@@ -124,6 +124,7 @@ public class DoctorsdetailActivity extends AppCompatActivity {
         loading =(ProgressWheel) findViewById(R.id.loading);
 
 
+
         book.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

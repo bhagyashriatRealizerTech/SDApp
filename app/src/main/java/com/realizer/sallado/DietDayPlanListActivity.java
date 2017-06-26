@@ -79,7 +79,7 @@ public class DietDayPlanListActivity extends AppCompatActivity {
         dayListView = (ListView) findViewById(R.id.doctorlistlayout);
         layoutLegend = (LinearLayout) findViewById(R.id.layoutbottom);
         legend = (TextView) findViewById(R.id.txt_change_legend);
-        layoutLegend.setVisibility(View.VISIBLE);
+        layoutLegend.setVisibility(View.GONE);
         legend.setTypeface(FontManager.getTypeface(this, FontManager.FONTAWESOME));
 
         dayListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

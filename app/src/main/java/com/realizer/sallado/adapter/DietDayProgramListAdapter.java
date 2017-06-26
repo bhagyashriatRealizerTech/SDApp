@@ -98,7 +98,7 @@ public class DietDayProgramListAdapter extends BaseAdapter {
             tempDate = null;
             try {
                 current = df.parse(currentDate);
-                tempDate = df.parse(holder.date.getText().toString());
+                tempDate = df.parse(temp);
             } catch (ParseException e) {
                 e.printStackTrace();
             }

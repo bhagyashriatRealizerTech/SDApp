@@ -13,6 +13,7 @@
         android:background="@android:color/transparent"
         android:textSize="16sp"
         android:id="@+id/txt_slot"
+        android:textColor="@drawable/listitemselector"
         android:gravity="center"/>
 
 </LinearLayout>

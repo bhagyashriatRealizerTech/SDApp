@@ -3,14 +3,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@drawable/signuptrans">
+    <TextView
+        android:id="@+id/alert_dialog_title"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:textSize="20sp"
+        android:text="Login"
+        android:gravity="left|center"
+        android:textColor="#fff"
+        android:paddingLeft="30dp"
+        android:background="@color/colorPrimaryDark"
+        />
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="10dp"
-        android:layout_centerInParent="true">
+        android:layout_below="@+id/alert_dialog_title"
+        android:layout_centerHorizontal="true">
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -18,79 +28,39 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+<TextView
+    android:layout_width="match_parent"
+    android:layout_height="30dp"
+    android:layout_alignParentTop="true"
+    android:text="Please Fill Following information"
+    android:id="@+id/txt_info"
+    android:textSize="16sp"
+    android:textStyle="bold"
+    android:gravity="center"/>
 
         <TextView
-            android:layout_width="160dp"
-            android:layout_height="30dp"
-            android:background="@drawable/text"
-            android:layout_centerHorizontal="true"
-            android:id="@+id/appText"/>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_below="@+id/appText"
-            android:layout_marginTop="24dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/dashboard_icon_background"
-            android:id="@+id/layout_name">
-    <EditText
-        android:id="@+id/edt_fname"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="40dp"
-        android:hint="First Name"
-        android:background="@android:color/transparent"
-        android:paddingLeft="12dp"
-        />
-            <TextView
-                android:layout_width="1.5dp"
-                android:layout_height="40dp"
-                android:layout_marginTop="-12dp"
-                android:background="@color/colorPrimary"/>
-            <EditText
-                android:id="@+id/edt_lname"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="40dp"
-                android:background="@android:color/transparent"
-                android:hint="Last Name"
-                android:paddingLeft="12dp"
-                />
-        </LinearLayout>
-        <TextView
-            android:layout_below="@+id/layout_name"
+            android:layout_below="@+id/txt_info"
             android:id="@+id/txt_bday"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
             android:textSize="17sp"
             android:hint="Birth Date"
+            android:visibility="visible"
             android:gravity="center_vertical"
             android:paddingLeft="12dp"
             android:background="@drawable/dashboard_icon_background"
             />
+
         <EditText
             android:layout_below="@+id/txt_bday"
-            android:id="@+id/edt_emailid"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:hint="Email ID"
-            android:paddingLeft="12dp"
-            android:background="@drawable/dashboard_icon_background"
-            />
-        <EditText
-            android:layout_below="@+id/edt_emailid"
             android:id="@+id/edt_mobno"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:layout_marginBottom="20dp"
@@ -191,7 +161,8 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_marginTop="20dp"
-            android:text="Sign Up"
+            android:layout_marginBottom="20dp"
+            android:text="Done"
             android:textAllCaps="false"
             android:textSize="22sp"
             android:layout_marginLeft="35dp"

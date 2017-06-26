@@ -70,8 +70,8 @@ public class DietMenuListActivity extends AppCompatActivity {
 
         if(from != null){
             if(from.equalsIgnoreCase("DC"))
-                Constants.alertDialog(DietMenuListActivity.this,"Information","We don not promote drinking alcoholic beverages." +
-                        "\nHow ever in order to reduce side effects of salty foods(Chakhna) consumed along with alcoholic beverages." +
+                Constants.redAlertDialog(DietMenuListActivity.this,"Information","We do not promote drinking alcoholic beverages." ,
+                        "\nHowever in order to reduce side effects of salty foods(Chakhna) consumed along with alcoholic beverages," +
                         "\nWe do suggest to have these healthy alternatives.");
         }
 

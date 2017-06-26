@@ -1,13 +1,15 @@
 package com.realizer.sallado.databasemodel;
 
+import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
  * Created by Win on 17-05-2017.
  */
 
-public class User {
+public class User implements Serializable{
 
     public String userId;
     public String userName;
@@ -20,6 +22,8 @@ public class User {
     public String userDietType;
     public boolean isFirstLogin;
     public String gender;
+    public String birthday;
+    public List<String> userAddress;
 
     public String getUserId() {
         return userId;
@@ -107,5 +111,21 @@ public class User {
 
     public void setGender(String gender) {
         this.gender = gender;
+    }
+
+    public String getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(String birthday) {
+        this.birthday = birthday;
+    }
+
+    public List<String> getUserAddress() {
+        return userAddress;
+    }
+
+    public void setUserAddress(List<String> userAddress) {
+        this.userAddress = userAddress;
     }
 }

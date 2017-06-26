@@ -6,8 +6,7 @@
     android:background="#d3d3d3">
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="40dp">
+        android:layout_height="match_parent">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -244,6 +243,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:background="#ffffff"
+        android:visibility="gone"
         android:layout_alignParentBottom="true">
         <TextView
             android:layout_width="35dp"

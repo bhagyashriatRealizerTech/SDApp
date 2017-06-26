@@ -1,5 +1,6 @@
 package com.realizer.sallado;
 
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -168,9 +169,11 @@ public class BookAppointmentActivity extends AppCompatActivity {
         for(int i=0;i<7;i++){
             if(position == i){
                 days[i].setBackgroundResource(R.drawable.layout_green_curved);
+                days[i].setTextColor(Color.WHITE);
             }
             else {
                 days[i].setBackgroundResource(R.drawable.layout_white_curved);
+                days[i].setTextColor(Color.GRAY);
             }
         }
         date = appoinmentList.get(position).getDate().split("-")[0];
