@@ -112,7 +112,7 @@ public class DietPlanDetailActivity extends AppCompatActivity {
                 myCalendar.set(Calendar.YEAR, year);
                 myCalendar.set(Calendar.MONTH, monthOfYear);
                 myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                upDateLable();
+                updateLable();
             }
 
         };
@@ -242,7 +242,8 @@ public class DietPlanDetailActivity extends AppCompatActivity {
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         int end = 0;
                         Dish dish = snapshot.getValue(Dish.class);
-                        String bText = type+": "+dish.getDishName()+"\n"+dish.getDishContent();
+                        String bText = type+": "+dish.getDishName
+                                ()+"\n"+dish.getDishContent();
                         end = bText.split(":")[0].length();
 
                         final SpannableStringBuilder sb = new SpannableStringBuilder(bText);
@@ -366,7 +367,7 @@ public class DietPlanDetailActivity extends AppCompatActivity {
         datePickerDialog.show();
     }
 
-    public void upDateLable(){
+    public void updateLable(){
 
         Date d = myCalendar.getTime();
         SimpleDateFormat simpleDateFormat  = new SimpleDateFormat("dd/MM/yyyy");
@@ -381,6 +382,7 @@ public class DietPlanDetailActivity extends AppCompatActivity {
         userDietProgram.setDietProgram(dietProgram);
         userDietProgram.setStartDate(startDate);
         userDietProgram.setEndDate(endDate);
+        userDietProgram.setDeliveryPoint("Hadapsar,Pune");
 
         DatabaseReference ref = userDietProgramRef.push();
         ref.setValue(userDietProgram);

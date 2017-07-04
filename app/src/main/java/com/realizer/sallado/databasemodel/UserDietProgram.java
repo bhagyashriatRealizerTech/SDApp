@@ -10,6 +10,7 @@ public class UserDietProgram {
     public String userId;
     public String startDate;
     public String endDate;
+    public String deliveryPoint;
 
     public DietProgram getDietProgram() {
         return dietProgram;
@@ -41,5 +42,13 @@ public class UserDietProgram {
 
     public void setEndDate(String endDate) {
         this.endDate = endDate;
+    }
+
+    public String getDeliveryPoint() {
+        return deliveryPoint;
+    }
+
+    public void setDeliveryPoint(String deliveryPoint) {
+        this.deliveryPoint = deliveryPoint;
     }
 }

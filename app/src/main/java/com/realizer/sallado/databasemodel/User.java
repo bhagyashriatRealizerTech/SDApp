@@ -24,6 +24,7 @@ public class User implements Serializable{
     public String gender;
     public String birthday;
     public List<String> userAddress;
+    public String thumbnailUrl;
 
     public String getUserId() {
         return userId;
@@ -127,5 +128,13 @@ public class User implements Serializable{
 
     public void setUserAddress(List<String> userAddress) {
         this.userAddress = userAddress;
+    }
+
+    public String getThumbnailUrl() {
+        return thumbnailUrl;
+    }
+
+    public void setThumbnailUrl(String thumbnailUrl) {
+        this.thumbnailUrl = thumbnailUrl;
     }
 }

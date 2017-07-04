@@ -1,6 +1,8 @@
 package com.realizer.sallado.utils;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
@@ -11,10 +13,12 @@ import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.realizer.sallado.R;
+import com.realizer.sallado.databasemodel.Dish;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -290,6 +294,51 @@ public class Constants {
         alertMsg.setText(message);
         alertMsgTwo.setText(messagetwo);
 
+        alertDialog.show();
+
+    }
+    public static void dishDetailAlertDialog(final Context context, String title,Dish dish) {
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+        View dialoglayout = inflater.inflate(R.layout.diet_menu_detail, null);
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setView(dialoglayout);
+
+        TextView titleName=(TextView) dialoglayout.findViewById(R.id.alert_dialog_title);
+        TextView dishDesc=(TextView) dialoglayout.findViewById(R.id.dishdesc);
+        TextView dishName = (TextView) dialoglayout.findViewById(R.id.txt_menu_name);
+        ImageView dishImage = (ImageView) dialoglayout.findViewById(R.id.img_dish);
+        ImageView dishType = (ImageView) dialoglayout.findViewById(R.id.img_menu_veg);
+        TextView close=(TextView) dialoglayout.findViewById(R.id.txt_close);
+        close.setTypeface(FontManager.getTypeface(context, FontManager.FONTAWESOME));
+
+
+        final AlertDialog alertDialog = builder.create();
+
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+
+        titleName.setText(title);
+        dishName.setText(dish.getDishName());
+        String desc = "Dish Description: "+ dish.getDishDescription()+"\nDish Ingredient: "+dish.getDishIngredients()+
+                "\nDish Content: "+dish.getDishContent()+"\n";
+        dishDesc.setText(desc);
+        if(dish.getDishType().equalsIgnoreCase("Veg")){
+            Bitmap largeIcon = BitmapFactory.decodeResource(context.getResources(), R.drawable.veg);
+           dishType.setImageBitmap(largeIcon);
+        }
+        else {
+            Bitmap largeIcon = BitmapFactory.decodeResource(context.getResources(), R.drawable.nonveg);
+            dishType.setImageBitmap(largeIcon);
+        }
+
+        if(!dish.getDishThumbnail().isEmpty()){
+            ImageStorage.setThumbnail(dishImage,dish.getDishThumbnail());
+        }
         alertDialog.show();
 
     }

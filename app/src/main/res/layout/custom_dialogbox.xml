@@ -23,7 +23,6 @@
         android:layout_below="@+id/alert_dialog_title"
         android:textColor="#212121"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
         android:textSize="16sp"
         android:layout_marginRight="15dp"
         android:text=""

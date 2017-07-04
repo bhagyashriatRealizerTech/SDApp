@@ -44,12 +44,14 @@ public class DietDayPlanActivity extends AppCompatActivity {
 
     public ImageView imgB,imgL,imgS,imgD;
     public TextView  txtB,txtL,txtS,txtD;
+    public TextView  txtTrackB,txtTrackL,txtTrackS,txtTrackD;
     public TextView  txtBdesc,txtLdesc,txtSdesc,txtDdesc;
     public TextView txtCb,txtCl,txtCs,txtCd,txtClegend;
     LinearLayout layoutB,layoutL,layoutS,layoutD;
     DayProgram dayProgram;
     DatabaseReference dishRef,groupRef;
     FirebaseDatabase database;
+
     ProgressWheel loading;
     Date currentdate,dayDate;
     SimpleDateFormat df,df1;
@@ -128,28 +130,38 @@ public class DietDayPlanActivity extends AppCompatActivity {
 
         if(dayDate != null){
             if(currentdate.equals(dayDate)){
-                setChangeButtonVisibility("07:00",txtCb);
-                setChangeButtonVisibility("11:00",txtCl);
-                setChangeButtonVisibility("14:00",txtCs);
-                setChangeButtonVisibility("17:00",txtCd);
+                setChangeButtonVisibility("07:00",txtCb,txtTrackB);
+                setChangeButtonVisibility("11:00",txtCl,txtTrackL);
+                setChangeButtonVisibility("14:00",txtCs,txtTrackS);
+                setChangeButtonVisibility("17:00",txtCd,txtTrackS);
             }
             else  if(currentdate.before(dayDate)){
                 txtCb.setVisibility(View.VISIBLE);
                 txtCl.setVisibility(View.VISIBLE);
                 txtCs.setVisibility(View.VISIBLE);
                 txtCd.setVisibility(View.VISIBLE);
+
+                txtTrackB.setVisibility(View.VISIBLE);
+                txtTrackL.setVisibility(View.VISIBLE);
+                txtTrackS.setVisibility(View.VISIBLE);
+                txtTrackD.setVisibility(View.VISIBLE);
             }
             else {
                 txtCb.setVisibility(View.GONE);
                 txtCl.setVisibility(View.GONE);
                 txtCs.setVisibility(View.GONE);
                 txtCd.setVisibility(View.GONE);
+
+                txtTrackB.setVisibility(View.GONE);
+                txtTrackL.setVisibility(View.GONE);
+                txtTrackS.setVisibility(View.GONE);
+                txtTrackD.setVisibility(View.GONE);
             }
         }
 
     }
 
-    public void setChangeButtonVisibility(String time,TextView textView){
+    public void setChangeButtonVisibility(String time,TextView textView,TextView textView1){
         try {
             dayDate = df1.parse(time);
             String temp = df1.format(new Date());
@@ -160,9 +172,11 @@ public class DietDayPlanActivity extends AppCompatActivity {
 
         if(currentdate.equals(dayDate) || currentdate.before(dayDate)){
             textView.setVisibility(View.VISIBLE);
+            textView1.setVisibility(View.VISIBLE);
         }
         else {
             textView.setVisibility(View.GONE);
+            textView1.setVisibility(View.GONE);
         }
     }
 
@@ -187,6 +201,12 @@ public class DietDayPlanActivity extends AppCompatActivity {
         txtCl = (TextView) findViewById(R.id.txt_changeL);
         txtCs = (TextView) findViewById(R.id.txt_changeS);
         txtCd = (TextView) findViewById(R.id.txt_changeD);
+
+        txtTrackB = (TextView) findViewById(R.id.txt_trackB);
+        txtTrackL = (TextView) findViewById(R.id.txt_trackL);
+        txtTrackS = (TextView) findViewById(R.id.txt_trackS);
+        txtTrackD = (TextView) findViewById(R.id.txt_trackD);
+
         txtClegend = (TextView) findViewById(R.id.txt_change_legend);
 
         layoutB = (LinearLayout) findViewById(R.id.layout_breakfast);
@@ -201,6 +221,11 @@ public class DietDayPlanActivity extends AppCompatActivity {
         txtCd.setTypeface(FontManager.getTypeface(this, FontManager.FONTAWESOME));
         txtCs.setTypeface(FontManager.getTypeface(this, FontManager.FONTAWESOME));
         txtClegend.setTypeface(FontManager.getTypeface(this, FontManager.FONTAWESOME));
+
+        txtTrackB.setTypeface(FontManager.getTypeface(this, FontManager.FONTAWESOME));
+        txtTrackL.setTypeface(FontManager.getTypeface(this, FontManager.FONTAWESOME));
+        txtTrackS.setTypeface(FontManager.getTypeface(this, FontManager.FONTAWESOME));
+        txtTrackD.setTypeface(FontManager.getTypeface(this, FontManager.FONTAWESOME));
 
 
         txtCb.setOnClickListener(new View.OnClickListener() {
@@ -230,6 +255,54 @@ public class DietDayPlanActivity extends AppCompatActivity {
                  setChangeData(dayProgram.getDinnerGroupID(),3);
             }
         });
+
+
+        txtTrackB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               trackOrder("B",getIntent().getStringExtra("DayDate"));
+            }
+        });
+
+        txtTrackL.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                trackOrder("L",getIntent().getStringExtra("DayDate"));
+            }
+        });
+
+        txtTrackS.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                trackOrder("S",getIntent().getStringExtra("DayDate"));
+            }
+        });
+
+        txtTrackD.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                trackOrder("D",getIntent().getStringExtra("DayDate"));
+            }
+        });
+    }
+
+    public void trackOrder(String type,String date){
+        df = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM yyyy");
+        String outDate = null;
+        try {
+           Date tempDate = df.parse(date);
+            outDate = simpleDateFormat.format(tempDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        if(outDate != null) {
+            Intent intent = new Intent(DietDayPlanActivity.this, TrackMyOrder.class);
+            intent.putExtra("DishType", type);
+            intent.putExtra("DishDate", outDate);
+            startActivity(intent);
+        }
     }
 
     public void setValue(){
@@ -304,7 +377,7 @@ public class DietDayPlanActivity extends AppCompatActivity {
                         sb.setSpan(bss, 0, end, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
                         textView.setText(sb);
 
-                        textViewDesc.setText(dish.getDishContent());
+                        textViewDesc.setText("Dish Ingredients: "+dish.getDishIngredients()+"\nDish Contents: "+dish.getDishContent());
 
                         if(!dish.getDishThumbnail().isEmpty()){
                             ImageStorage.setThumbnail(imageView,dish.getDishThumbnail());

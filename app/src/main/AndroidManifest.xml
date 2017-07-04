@@ -94,7 +94,15 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBYwlQz3opNVWU1eohH03f5xG95i0KdviI" />
 
-        <activity android:name=".MyCurrentLocationActivity"/>
+        <activity android:name=".MyCurrentLocationActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".TrackMyOrder"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".WelcomeActivity"
+            android:screenOrientation="portrait"/>
+
     </application>
 
 </manifest>

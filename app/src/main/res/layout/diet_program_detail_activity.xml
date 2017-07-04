@@ -139,7 +139,7 @@
         android:gravity="center"
         android:textColor="#ffffff"
         android:textAllCaps="false"
-        android:background="@drawable/greenshadoweffect"
+        android:background="@drawable/square_background_curved"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"

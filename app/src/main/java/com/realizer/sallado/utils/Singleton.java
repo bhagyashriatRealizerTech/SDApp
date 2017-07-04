@@ -12,6 +12,7 @@ public class Singleton {
     public static boolean isChange = false;
     public static boolean isDayListChange =false;
     public static boolean isDietProgramChange = false;
+    public static boolean isDoneClick = false;
     public static UserDietProgram userDietProgram;
     public static FirebaseDatabase database = null;
 
@@ -71,5 +72,13 @@ public class Singleton {
         Singleton.database = database;
         if(flag)
         Singleton.database.setPersistenceEnabled(true);
+    }
+
+    public static boolean isDoneClick() {
+        return isDoneClick;
+    }
+
+    public static void setIsDoneClick(boolean isDoneClick) {
+        Singleton.isDoneClick = isDoneClick;
     }
 }

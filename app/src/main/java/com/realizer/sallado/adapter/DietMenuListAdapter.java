@@ -10,6 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.realizer.sallado.DietMenuListActivity;
@@ -18,6 +19,7 @@ import com.realizer.sallado.databasemodel.Dish;
 import com.realizer.sallado.databasemodel.OrderedFood;
 import com.realizer.sallado.model.DietMenuModel;
 import com.realizer.sallado.model.DietPlanModel;
+import com.realizer.sallado.utils.Constants;
 import com.realizer.sallado.utils.ImageStorage;
 
 import java.util.List;
@@ -73,6 +75,8 @@ public class DietMenuListAdapter extends BaseAdapter {
             this.convertView = layoutInflater.inflate(R.layout.diet_menu_list_item_layout, null);
 
             holder = new ViewHolder();
+
+            holder.mainLayout = (RelativeLayout) this.convertView.findViewById(R.id.mainrl);
             holder.menuImage = (ImageView) this.convertView.findViewById(R.id.img_menu);
             holder.typeImage = (ImageView) this.convertView.findViewById(R.id.img_menu_veg);
             holder.menuName = (TextView) this.convertView.findViewById(R.id.txt_menu_name);
@@ -84,10 +88,12 @@ public class DietMenuListAdapter extends BaseAdapter {
             holder.minus = (Button) this.convertView.findViewById(R.id.btn_minus);
             holder.plusminus = (LinearLayout) this.convertView.findViewById(R.id.layout_plusminus);
 
+            holder.mainLayout.setTag(position);
             holder.add.setTag(position);
             holder.plus.setTag(position);
             holder.minus.setTag(position);
             holder.count.setTag(position);
+            holder.menuImage.setTag(position);
 
             holder.menuName.setText(dietMenuList.get(position).getDishName());
             holder.menupPrice.setText("₹ "+dietMenuList.get(position).getDishPrice());
@@ -238,6 +244,14 @@ public class DietMenuListAdapter extends BaseAdapter {
             }
         });
 
+        holder.menuImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Constants.dishDetailAlertDialog(context,"Dish Detail",dietMenuList.get((Integer) view.getTag()));
+            }
+        });
+
+
 
         return this.convertView;
     }
@@ -247,6 +261,7 @@ public class DietMenuListAdapter extends BaseAdapter {
         TextView menuName,menupPrice,menuRatings,count;
         Button add,plus,minus;
         LinearLayout plusminus;
+        RelativeLayout mainLayout;
     }
 }
 

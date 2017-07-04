@@ -117,9 +117,8 @@ public class LoginActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        getSupportActionBar().hide();
-
         setContentView(R.layout.login_activity);
+        getSupportActionBar().hide();
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 

@@ -45,6 +45,7 @@ public class DietMenuListActivity extends AppCompatActivity {
     ProgressWheel loading;
     int counter= 0;
     String from;
+    TextView heading;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,10 +70,16 @@ public class DietMenuListActivity extends AppCompatActivity {
         from = getIntent().getStringExtra("FromWhere");
 
         if(from != null){
-            if(from.equalsIgnoreCase("DC"))
-                Constants.redAlertDialog(DietMenuListActivity.this,"Information","We do not promote drinking alcoholic beverages." ,
-                        "\nHowever in order to reduce side effects of salty foods(Chakhna) consumed along with alcoholic beverages," +
-                        "\nWe do suggest to have these healthy alternatives.");
+            if(from.equalsIgnoreCase("DC")) {
+                heading.setVisibility(View.GONE);
+                Constants.redAlertDialog(DietMenuListActivity.this, "Information", "We do not promote drinking alcoholic beverages.",
+                        "However in order to reduce side effects of salty foods(Chakhna) consumed along with alcoholic beverages," +
+                                " we do suggest to have these healthy alternatives.");
+            }
+            else {
+                heading.setVisibility(View.VISIBLE);
+                heading.setText("Crash Eater Definition\nMin. Food Preparation + Delivery Time: 2 Hrs");
+            }
         }
 
         dishRef.addValueEventListener(new ValueEventListener() {
@@ -114,29 +121,9 @@ public class DietMenuListActivity extends AppCompatActivity {
         dietgrid = (GridView) findViewById(R.id.grid_dietmenu);
         count = (TextView) findViewById(R.id.txt_menu_count);
         price = (TextView) findViewById(R.id.txt_menu_price);
+        heading = (TextView) findViewById(R.id.txtHeading);
         order = (TextView) findViewById(R.id.txt_order);
         loading =(ProgressWheel) findViewById(R.id.loading);
-
-        /*dietgrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                *//*Intent intent = new Intent(DietPlanListActivity.this, DoctorsdetailActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("Photo",doctorListModels.get(position).getImageUrl());
-                bundle.putString("Name",doctorListModels.get(position).getDoctorName());
-                bundle.putString("Degree",doctorListModels.get(position).getDoctorDeggre());
-                bundle.putString("Experience",doctorListModels.get(position).getDoctorExperience());
-                bundle.putString("Ratings","99%");
-                bundle.putString("Description",doctorListModels.get(position).getDetaildescription());
-                bundle.putString("ClinicName",doctorListModels.get(position).getClinicName());
-                bundle.putString("Address",doctorListModels.get(position).getDetailAddress());
-                bundle.putString("Time",doctorListModels.get(position).getTimings());
-                bundle.putString("fees",doctorListModels.get(position).getFees());
-               intent.putExtras(bundle);
-                startActivity(intent);*//*
-            }
-        });*/
 
 
         order.setOnClickListener(new View.OnClickListener() {

@@ -1,3 +1,4 @@
+
 package com.realizer.sallado;
 
 
@@ -7,16 +8,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.location.Address;
 import android.location.Criteria;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.ResultReceiver;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
@@ -24,14 +21,9 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
@@ -50,34 +42,21 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.realizer.sallado.databasemodel.User;
+import com.realizer.sallado.databasemodel.Driver;
+import com.realizer.sallado.databasemodel.UserDietDelivery;
 import com.realizer.sallado.utils.Constants;
 import com.realizer.sallado.utils.Singleton;
 import com.realizer.sallado.utils.UtilLocation;
 import com.realizer.sallado.view.ProgressWheel;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
 
 /**
  * Created by Win on 14/01/2017.
  */
-public class MyCurrentLocationActivity extends AppCompatActivity implements OnMapReadyCallback,
+public class TrackMyOrder extends AppCompatActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
@@ -94,31 +73,43 @@ public class MyCurrentLocationActivity extends AppCompatActivity implements OnMa
     LocationManager locationmanager;
     String provider;
     FirebaseDatabase database;
-    DatabaseReference myRef;
-    User user;
+    DatabaseReference driverRef;
     SharedPreferences preferences;
-    static String premise,route,sublocality,locality,administrative_area_level_1,country,postal_code;
+    List<UserDietDelivery> userDietDeliveryList;
+    UserDietDelivery userDietDelivery;
+    List<com.realizer.sallado.databasemodel.Location> locationList;
+    DatabaseReference userDietDelRef;
+    Driver driver;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle(Constants.actionBarTitle("My Current Location", this));
-        loading = (ProgressWheel) findViewById(R.id.loading);
-        preferences  = PreferenceManager.getDefaultSharedPreferences(MyCurrentLocationActivity.this);
+        actionBar.setTitle(Constants.actionBarTitle("Track Order", this));
+        //loading = (ProgressWheel) findViewById(R.id.loading);
+        preferences  = PreferenceManager.getDefaultSharedPreferences(TrackMyOrder.this);
 
-        user = (User) getIntent().getSerializableExtra("UserInfo");
+        userDietDeliveryList = new ArrayList<>();
+        locationList = new ArrayList<>();
 
+        if(Singleton.getDatabase() == null)
+            Singleton.setDatabase(FirebaseDatabase.getInstance());
 
         database = Singleton.getDatabase();
-        myRef = database.getReference("User");
-
+        driverRef = database.getReference("Driver");
+        userDietDelRef = database.getReference("UserDietDelivery");
+        userDietDelRef.keepSynced(true);
+        driverRef.keepSynced(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
         }
 
-        checkLocationService chklocation = new checkLocationService(MyCurrentLocationActivity.this);
+        getOrders();
+
+        checkLocationService chklocation = new checkLocationService(TrackMyOrder.this);
         chklocation.execute();
 
 
@@ -129,25 +120,178 @@ public class MyCurrentLocationActivity extends AppCompatActivity implements OnMa
         if (mMap == null) {
             // Try to obtain the map from the SupportMapFragment.
             SupportMapFragment mapFrag = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-            mapFrag.getMapAsync(this);
+            mapFrag.getMapAsync(TrackMyOrder.this);
 
         }
+
     }
 
+    public void getOrders(){
+        //loading.setVisibility(View.VISIBLE);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(TrackMyOrder.this);
+        String driverId = preferences.getString("UserID","");
 
+        Query query = userDietDelRef.orderByChild("indexKey").equalTo(driverId+"_"+getIntent().getStringExtra("DishDate")+"_"+getIntent().getStringExtra("DishType"));
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                userDietDeliveryList.clear();
 
-    private boolean CheckGooglePlayServices() {
-        GoogleApiAvailability googleAPI = GoogleApiAvailability.getInstance();
-        int result = googleAPI.isGooglePlayServicesAvailable(this);
-        if (result != ConnectionResult.SUCCESS) {
-            if (googleAPI.isUserResolvableError(result)) {
-                googleAPI.getErrorDialog(this, result,
-                        0).show();
+                if(dataSnapshot.exists()){
+                    for(DataSnapshot snapshot: dataSnapshot.getChildren()){
+                        UserDietDelivery userDietDelivery = snapshot.getValue(UserDietDelivery.class);
+                        userDietDeliveryList.add(userDietDelivery);
+                    }
+                    if(userDietDeliveryList.size()>0){
+
+                        userDietDelivery = userDietDeliveryList.get(0);
+                        setDriverMarker(userDietDeliveryList.get(0).getDriverId());
+                    }
+                   // loading.setVisibility(View.GONE);
+                }
+                else {
+                   // loading.setVisibility(View.GONE);
+                }
             }
-            return false;
-        }
-        return true;
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
+
+    public void setDriverMarker(String id){
+
+        driverRef.child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    driver = dataSnapshot.getValue(Driver.class);
+
+                    latitude = driver.getLatitude();
+                    longitude = driver.getLongitude();
+
+                    if(mMap != null) {
+                        mMap.clear();
+                        myMarker();
+                        createMarker(userDietDelivery);
+                    }
+                }
+                else {
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+/*    public void setData(UserDietDelivery userDietDelivery,int i){
+
+        Geocoder coder = new Geocoder(this);
+        try {
+            ArrayList<Address> adresses = (ArrayList<Address>) coder.getFromLocationName(userDietDelivery.getDeliveryPoint(), 1);
+            for(Address add : adresses){
+                //if (statement) {//Controls to ensure it is right address such as country etc.
+                    double longitude = add.getLongitude();
+                    double latitude = add.getLatitude();
+                com.realizer.salladodriver.databasemodel.Location location = new com.realizer.salladodriver.databasemodel.Location();
+                location.setLatitude(latitude);
+                location.setLongitude(longitude);
+                location.setUserDietDelivery(userDietDelivery);
+                locationList.add(location);
+                //}
+
+                createMarker(latitude,longitude,userDietDelivery.getCustomerName());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public  JSONObject getLocationInfo(String address) {
+        StringBuilder stringBuilder = new StringBuilder();
+        try {
+
+            address = address.replaceAll(" ","%20");
+
+            HttpPost httppost = new HttpPost("http://maps.google.com/maps/api/geocode/json?address=" + address + "&sensor=false");
+            HttpClient client = new DefaultHttpClient();
+            HttpResponse response;
+            stringBuilder = new StringBuilder();
+
+
+            response = client.execute(httppost);
+            HttpEntity entity = response.getEntity();
+            InputStream stream = entity.getContent();
+            int b;
+            while ((b = stream.read()) != -1) {
+                stringBuilder.append((char) b);
+            }
+        } catch (ClientProtocolException e) {
+        } catch (IOException e) {
+        }
+
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject = new JSONObject(stringBuilder.toString());
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        return jsonObject;
+    }
+
+    public  boolean getLatLong(JSONObject jsonObject,UserDietDelivery userDietDelivery) {
+
+        try {
+
+            double longitute = ((JSONArray)jsonObject.get("results")).getJSONObject(0)
+                    .getJSONObject("geometry").getJSONObject("location")
+                    .getDouble("lng");
+
+            double latitude = ((JSONArray)jsonObject.get("results")).getJSONObject(0)
+                    .getJSONObject("geometry").getJSONObject("location")
+                    .getDouble("lat");
+
+            com.realizer.salladodriver.databasemodel.Location location = new com.realizer.salladodriver.databasemodel.Location();
+            location.setLatitude(latitude);
+            location.setLongitude(longitute);
+            location.setUserDietDelivery(userDietDelivery);
+            locationList.add(location);
+            //}
+
+            createMarker(latitude,longitude,userDietDelivery.getCustomerName());
+
+
+        } catch (JSONException e) {
+            return false;
+
+        }
+
+        return true;
+    }*/
+
+    protected void createMarker(UserDietDelivery userDietDelivery) {
+
+        mMap.addMarker(new MarkerOptions()
+                .position(new LatLng(userDietDelivery.getLatitude(), userDietDelivery.getLongitude()))
+                .anchor(0.5f, 0.5f)
+                .title(userDietDelivery.getCustomerName())
+                .snippet("")
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA)).visible(true));
+
+        /*.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA)).visible(true));*/
+
+        /*.icon(BitmapDescriptorFactory.fromBitmap(writeTextOnDrawable(R.drawable.map, near)))*/
+    }
+
 
 
     /**
@@ -168,20 +312,12 @@ public class MyCurrentLocationActivity extends AppCompatActivity implements OnMa
             if (provider != null & !provider.equals(""))
 
             {
-                Location locatin = UtilLocation.getLastKnownLoaction(true, MyCurrentLocationActivity.this);
+                Location locatin = UtilLocation.getLastKnownLoaction(true, TrackMyOrder.this);
                 if (locatin != null) {
-                    latitude = locatin.getLatitude();
-                    longitude = locatin.getLongitude();
-                    LatLng latLng = new LatLng(locatin.getLatitude(), locatin.getLongitude());
-                    MarkerOptions markerOptions = new MarkerOptions();
-                    markerOptions.position(latLng);
-                    markerOptions.title("Current Position");
-                    markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
-                    mCurrLocationMarker = mMap.addMarker(markerOptions);
+                    //latitude = locatin.getLatitude();
+                    //longitude = locatin.getLongitude();
 
-                    //move map camera
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-                    mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
+
                 } else {
                     // Toast.makeText(AutoSyncService.this, "location not found", Toast.LENGTH_LONG).show();
                 }
@@ -212,6 +348,19 @@ public class MyCurrentLocationActivity extends AppCompatActivity implements OnMa
 
     }
 
+    public void myMarker(){
+        LatLng latLng = new LatLng(latitude, longitude);
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(latLng);
+        markerOptions.title("My Position");
+        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+        mCurrLocationMarker = mMap.addMarker(markerOptions);
+
+        //move map camera
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
+    }
+
     protected synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -224,9 +373,11 @@ public class MyCurrentLocationActivity extends AppCompatActivity implements OnMa
     @Override
     public void onConnected(Bundle bundle) {
         mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(1000);
-        mLocationRequest.setFastestInterval(1000);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+        mLocationRequest.setInterval(10000);
+        mLocationRequest.setFastestInterval(5000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        mLocationRequest.setSmallestDisplacement(10);
+
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
@@ -294,7 +445,7 @@ public class MyCurrentLocationActivity extends AppCompatActivity implements OnMa
             if (provider != null & !provider.equals(""))
 
             {
-                Location locatin = UtilLocation.getLastKnownLoaction(true, MyCurrentLocationActivity.this);
+                Location locatin = UtilLocation.getLastKnownLoaction(true, TrackMyOrder.this);
                 if (locatin != null) {
                     latitude = locatin.getLatitude();
                     latitude = locatin.getLongitude();
@@ -409,11 +560,6 @@ public class MyCurrentLocationActivity extends AppCompatActivity implements OnMa
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main,menu);
-        return true;
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -421,18 +567,6 @@ public class MyCurrentLocationActivity extends AppCompatActivity implements OnMa
         switch (id) {
             case android.R.id.home:
                 finish();
-                break;
-            case R.id.action_done:
-                if(latitude != null && longitude!= null) {
-
-                    loading.setVisibility(View.VISIBLE);
-                    String address = getLocationName(latitude, longitude);
-                    SharedPreferences.Editor edit = preferences.edit();
-                    edit.putString("Address",address);
-                    edit.commit();
-                    Singleton.getInstance().setIsDoneClick(true);
-                    finish();
-                }
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -479,7 +613,7 @@ public class MyCurrentLocationActivity extends AppCompatActivity implements OnMa
 
         public checkLocationService(Context mycontext) {
             this.mycontext=mycontext;
-            loading.setVisibility(View.VISIBLE);
+            //loading.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -493,7 +627,7 @@ public class MyCurrentLocationActivity extends AppCompatActivity implements OnMa
         @Override
         protected void onPostExecute(Boolean string) {
             super.onPostExecute(string);
-            loading.setVisibility(View.GONE);
+            //loading.setVisibility(View.GONE);
             if (string)
             {
             }
@@ -534,146 +668,5 @@ public class MyCurrentLocationActivity extends AppCompatActivity implements OnMa
     }
 
 
-    public static String getLocationCityName( double lat, double lon ){
-        JSONObject result = getLocationFormGoogle(lat + "," + lon );
-        return getCityAddress(result);
-    }
-
-    protected static JSONObject getLocationFormGoogle(String placesName) {
-
-        String apiRequest = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + placesName; //+ "&ka&sensor=false"
-        HttpGet httpGet = new HttpGet(apiRequest);
-        HttpClient client = new DefaultHttpClient();
-        HttpResponse response;
-        StringBuilder stringBuilder = new StringBuilder();
-
-        try {
-            response = client.execute(httpGet);
-            HttpEntity entity = response.getEntity();
-            InputStream stream = entity.getContent();
-            int b;
-            while ((b = stream.read()) != -1) {
-                stringBuilder.append((char) b);
-            }
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject = new JSONObject(stringBuilder.toString());
-        } catch (JSONException e) {
-
-            e.printStackTrace();
-        }
-
-        return jsonObject;
-    }
-
-    protected static String getCityAddress( JSONObject result ){
-        if( result.has("results") ){
-            try {
-                JSONArray array = result.getJSONArray("results");
-                if( array.length() > 0 ){
-                    JSONObject place = array.getJSONObject(0);
-                    JSONArray components = place.getJSONArray("address_components");
-                    for( int i = 0 ; i < components.length() ; i++ ){
-                        JSONObject component = components.getJSONObject(i);
-                        JSONArray types = component.getJSONArray("types");
-                        for( int j = 0 ; j < types.length() ; j ++ ){
-                            if( types.getString(j).equals("premise") ){
-                                premise= component.getString("long_name");
-                            }
-                            if( types.getString(j).equals("route") ){
-                                route= component.getString("long_name");
-                            }
-                            if( types.getString(j).equals("sublocality") ){
-                                sublocality= component.getString("long_name");
-                            }
-                            if( types.getString(j).equals("locality") ){
-                                locality= component.getString("long_name");
-                            }
-                            if( types.getString(j).equals("administrative_area_level_1") ){
-                                administrative_area_level_1= component.getString("long_name");
-                            }
-                            if( types.getString(j).equals("country") ){
-                                country= component.getString("long_name");
-                            }
-                            if( types.getString(j).equals("postal_code") ){
-                                postal_code= component.getString("long_name");
-                            }
-                        }
-                    }
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-                loading.setVisibility(View.GONE);
-            }
-        }
-
-        String address=null;
-        if (premise.equals(null) && locality.equals(null))
-        {
-            address=null;
-        }
-        else
-        {
-            address=premise+",\n"+sublocality+", "+locality+",\nPincode"+postal_code;
-        }
-
-        loading.setVisibility(View.GONE);
-        return address;
-    }
-
-    public String getLocationName(double latitude, double longitude) {
-
-        String cityName = "";
-
-        Geocoder geocoder;
-        List<Address> addresses;
-        geocoder = new Geocoder(getBaseContext(), Locale.getDefault());
-
-        try {
-
-                addresses = geocoder.getFromLocation(latitude, longitude, 1);
-                String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-                String city = addresses.get(0).getLocality();
-                String pincode = addresses.get(0).getPostalCode();
-                cityName = address+",\n"+addresses.get(0).getAddressLine(1)+", "+city+",\nPinocde: "+pincode;
-            List<String> temp = new ArrayList<String>();
-            if(user.getUserAddress() == null){
-                temp.add(cityName);
-                user.setUserAddress(temp);
-            }
-            else {
-                temp = user.getUserAddress();
-                temp.add(cityName);
-                user.setUserAddress(temp);
-
-            }
-            myRef.child(preferences.getString("UserID","")).setValue(user);
-            loading.setVisibility(View.GONE);
-
-
-        } catch (IOException e) {
-            if (Constants.isConnectingToInternet(MyCurrentLocationActivity.this))
-            {
-                cityName=getLocationCityName(latitude,longitude);
-            }
-            else
-            {
-                //Utility.CustomToast(EmergencyActivity.this, "No Internet Connection..!");
-            }
-
-            e.printStackTrace();
-
-        }
-
-
-        return cityName;
-
-    }
 
 }

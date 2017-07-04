@@ -103,15 +103,19 @@ public class DietPlanChangeListAdapter extends BaseAdapter {
             public void onClick(View view) {
                 int pos = (Integer) view.getTag();
 
-                if(isChecked.get(pos))
-                    isChecked.set(pos,false);
+                if(isChecked.get(pos)) {
+                    isChecked.set(pos, false);
+                    if(context instanceof DietChangePlanActivity)
+                        ((DietChangePlanActivity)context).setDish(null,false);
+                }
+
                 else {
                     for(int i=0;i<isChecked.size();i++)
                     {
                         if(i == pos) {
                             isChecked.set(i, true);
                             if(context instanceof DietChangePlanActivity)
-                                ((DietChangePlanActivity)context).setDish(dietDishList.get(pos).getDishId());
+                                ((DietChangePlanActivity)context).setDish(dietDishList.get(pos).getDishId(),true);
                         }
                         else
                             isChecked.set(i,false);
@@ -127,7 +131,6 @@ public class DietPlanChangeListAdapter extends BaseAdapter {
         return this.convertView;
     }
     static class ViewHolder{
-
         TextView title,desc;
         ImageView imageView;
         CheckBox checkBox;

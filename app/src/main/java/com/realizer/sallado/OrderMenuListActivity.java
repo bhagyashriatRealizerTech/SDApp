@@ -32,6 +32,7 @@ import com.realizer.sallado.databasemodel.OrderedFood;
 import com.realizer.sallado.databasemodel.User;
 import com.realizer.sallado.model.DietMenuModel;
 import com.realizer.sallado.utils.Constants;
+import com.realizer.sallado.utils.FontManager;
 import com.realizer.sallado.utils.Singleton;
 import com.realizer.sallado.view.ProgressWheel;
 
@@ -56,6 +57,7 @@ public class OrderMenuListActivity extends AppCompatActivity {
     OrderFood orderFood;
     List<OrderedFood> orderedFoodList;
     String from;
+    TextView edit;
     OrderMenuListAdapter dietListAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -159,6 +161,17 @@ public class OrderMenuListActivity extends AppCompatActivity {
         price = (TextView) findViewById(R.id.txt_total);
         proceed = (Button) findViewById(R.id.btn_proceed);
         loading =(ProgressWheel) findViewById(R.id.loading);
+        edit = (TextView) findViewById(R.id.txt_edit);
+        edit.setTypeface(FontManager.getTypeface(this, FontManager.FONTAWESOME));
+
+        edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(OrderMenuListActivity.this,MyAddressActivity.class);
+                startActivity(intent);
+            }
+        });
+
         if(from.equalsIgnoreCase("MyOrder")){
             proceed.setVisibility(View.GONE);
         }
@@ -203,13 +216,6 @@ public class OrderMenuListActivity extends AppCompatActivity {
 
         });
 
-        address.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(OrderMenuListActivity.this,MyAddressActivity.class);
-                startActivity(intent);
-            }
-        });
 
 
     }

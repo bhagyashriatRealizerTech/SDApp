@@ -248,4 +248,14 @@ public class MyAddressActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if(Singleton.getInstance().isDoneClick()){
+            Singleton.getInstance().setIsDoneClick(false);
+            finish();
+        }
+    }
 }

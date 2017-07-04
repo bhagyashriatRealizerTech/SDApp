@@ -1,14 +1,20 @@
 package com.realizer.sallado;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -21,6 +27,7 @@ import com.realizer.sallado.databasemodel.Dish;
 import com.realizer.sallado.databasemodel.DishGroup;
 import com.realizer.sallado.databasemodel.UserDietProgram;
 import com.realizer.sallado.utils.Constants;
+import com.realizer.sallado.utils.FontManager;
 import com.realizer.sallado.utils.Singleton;
 import com.realizer.sallado.view.ProgressWheel;
 
@@ -40,6 +47,7 @@ public class DietChangePlanActivity extends AppCompatActivity {
     private ProgressWheel loading;
     DishGroup dishGroup;
     String dishId,day;
+    public boolean isCheck=false;
     int type;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,8 +116,9 @@ public class DietChangePlanActivity extends AppCompatActivity {
 
     }
 
-    public void setDish(String dishId){
+    public void setDish(String dishId,boolean isCheck){
         this.dishId = dishId;
+        this.isCheck = isCheck;
     }
 
     @Override
@@ -127,8 +136,13 @@ public class DietChangePlanActivity extends AppCompatActivity {
                 return true;
             case R.id.action_done:
                 // app icon in action bar clicked; go home
-                loading.setVisibility(View.VISIBLE);
-                setChangeData();
+                if(isCheck) {
+                    loading.setVisibility(View.VISIBLE);
+                    setChangeData();
+                }
+                else {
+                    Constants.alertDialog(DietChangePlanActivity.this,"Change Dish","No Dish Selected.\nPlease Select Dish to replace your default Dish");
+                }
 
                 return true;
             default:
@@ -167,7 +181,8 @@ public class DietChangePlanActivity extends AppCompatActivity {
                         Singleton.getInstance().setIsDayListChange(true);
                         Singleton.getInstance().setIsDietProgramChange(true);
                         loading.setVisibility(View.GONE);
-                        finish();
+                        alertDialog(DietChangePlanActivity.this,"Change Dish","Successfully changeed Dish.\n Enjoy your meal.");
+
                     }
 
 
@@ -178,6 +193,49 @@ public class DietChangePlanActivity extends AppCompatActivity {
                     loading.setVisibility(View.GONE);
                 }
             });
+
+    }
+
+    public  void alertDialog(final Context context, String title, String message) {
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+        View dialoglayout = inflater.inflate(R.layout.custom_dialogbox, null);
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setView(dialoglayout);
+
+        RelativeLayout relativeLayout = (RelativeLayout) dialoglayout.findViewById(R.id.layout_buttton);
+        Button buttonok= (Button) dialoglayout.findViewById(R.id.alert_btn_ok);
+        TextView titleName=(TextView) dialoglayout.findViewById(R.id.alert_dialog_title);
+        TextView alertMsg=(TextView) dialoglayout.findViewById(R.id.alert_dialog_message);
+        TextView close=(TextView) dialoglayout.findViewById(R.id.txt_close);
+        close.setTypeface(FontManager.getTypeface(context, FontManager.FONTAWESOME));
+        close.setVisibility(View.GONE);
+
+
+        relativeLayout.setVisibility(View.VISIBLE);
+
+        final AlertDialog alertDialog = builder.create();
+        alertDialog.setCancelable(false);
+
+        buttonok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+                finish();
+            }
+        });
+
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+
+        titleName.setText(title);
+        alertMsg.setText(message);
+
+        alertDialog.show();
 
     }
 }
