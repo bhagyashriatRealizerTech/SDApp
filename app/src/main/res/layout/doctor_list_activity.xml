@@ -55,4 +55,14 @@
         app:matProg_barColor="@color/colorAccent"
         app:matProg_progressIndeterminate="true"
         />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/Nodata"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:visibility="gone"
+        android:text="No Diet Programs Available"/>
 </RelativeLayout>

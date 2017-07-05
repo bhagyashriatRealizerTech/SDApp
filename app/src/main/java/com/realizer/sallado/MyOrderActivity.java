@@ -12,6 +12,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -40,6 +41,7 @@ public class MyOrderActivity extends AppCompatActivity {
     FirebaseDatabase database;
     DatabaseReference orderRef;
     ProgressWheel loading;
+    TextView noData;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,8 +83,12 @@ public class MyOrderActivity extends AppCompatActivity {
                     Collections.reverse(orderFoodList);
 
                     if(orderFoodList.size() > 0) {
+                        noData.setVisibility(View.GONE);
                         MyOrderListAdapter doctorListAdapter = new MyOrderListAdapter(orderFoodList, MyOrderActivity.this);
                         orderList.setAdapter(doctorListAdapter);
+                    }
+                    else {
+                        noData.setVisibility(View.VISIBLE);
                     }
 
                     loading.setVisibility(View.GONE);
@@ -108,6 +114,7 @@ public class MyOrderActivity extends AppCompatActivity {
 
         orderList = (ListView) findViewById(R.id.doctorlistlayout);
         loading =(ProgressWheel) findViewById(R.id.loading);
+        noData = (TextView) findViewById(R.id.Nodata);
 
     }
 

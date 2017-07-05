@@ -12,6 +12,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -45,6 +46,7 @@ public class DietPlanListActivity extends AppCompatActivity {
     DatabaseReference dietProgramRef;
     ProgressWheel loading;
     String fromWhere;
+    TextView noData;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,8 +85,12 @@ public class DietPlanListActivity extends AppCompatActivity {
                         }
 
                         if (dietProgramList.size() > 0) {
+                            noData.setVisibility(View.GONE);
                             DietPlanListAdapter dietListAdapter = new DietPlanListAdapter(dietProgramList, DietPlanListActivity.this);
                             dietList.setAdapter(dietListAdapter);
+                        }
+                        else {
+                            noData.setVisibility(View.VISIBLE);
                         }
 
                         loading.setVisibility(View.GONE);
@@ -130,8 +136,12 @@ public class DietPlanListActivity extends AppCompatActivity {
                         }
 
                         if (dietProgramList.size() > 0) {
+                            noData.setVisibility(View.GONE);
                             DietPlanListAdapter dietListAdapter = new DietPlanListAdapter(dietProgramList, DietPlanListActivity.this);
                             dietList.setAdapter(dietListAdapter);
+                        }
+                        else {
+                            noData.setVisibility(View.VISIBLE);
                         }
 
                         loading.setVisibility(View.GONE);
@@ -155,6 +165,7 @@ public class DietPlanListActivity extends AppCompatActivity {
 
         dietList = (ListView) findViewById(R.id.dietpkglist);
         loading =(ProgressWheel) findViewById(R.id.loading);
+        noData = (TextView) findViewById(R.id.Nodata);
 
         dietList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
