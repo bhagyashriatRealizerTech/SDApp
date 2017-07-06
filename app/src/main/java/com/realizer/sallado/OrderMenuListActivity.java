@@ -11,9 +11,11 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -25,6 +27,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.realizer.sallado.adapter.DietMenuListAdapter;
 import com.realizer.sallado.adapter.DietPlanChangeListAdapter;
 import com.realizer.sallado.adapter.OrderMenuListAdapter;
+import com.realizer.sallado.databasemodel.DeliveryPoint;
 import com.realizer.sallado.databasemodel.Dish;
 import com.realizer.sallado.databasemodel.DoctorAvalability;
 import com.realizer.sallado.databasemodel.OrderFood;
@@ -48,18 +51,22 @@ public class OrderMenuListActivity extends AppCompatActivity {
     ListView menulist;
     List<DietMenuModel> dietMenuModels;
     List<OrderedFood> tempList;
-    TextView address,price;
+    TextView price;
     Button proceed;
     int total,counter;
     String userid;
     FirebaseDatabase database;
-    DatabaseReference orderRef,dishRef;
+    DatabaseReference orderRef,dishRef,deliverPointRef;
     ProgressWheel loading;
     OrderFood orderFood;
     List<OrderedFood> orderedFoodList;
+    List<DeliveryPoint> deliveryPointList;
+    List<String> placeName;
     String from;
-    TextView edit;
+    String deliverPointID;
+    //TextView edit;
     OrderMenuListAdapter dietListAdapter;
+    Spinner deliverPoint;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,14 +78,21 @@ public class OrderMenuListActivity extends AppCompatActivity {
         database = Singleton.getDatabase();
         orderRef = database.getReference("OrderFood");
         dishRef = database.getReference("Dish");
+        deliverPointRef = database.getReference("DeliveryPoint");
 
         orderRef.keepSynced(true);
+        deliverPointRef.keepSynced(true);
+        dishRef.keepSynced(true);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         dietMenuModels = new ArrayList<>();
         orderedFoodList = new ArrayList<>();
+        deliveryPointList = new ArrayList<>();
+        placeName = new ArrayList<>();
+
+
         userid = PreferenceManager.getDefaultSharedPreferences(OrderMenuListActivity.this).getString("UserID", "");
         from = getIntent().getStringExtra("FromWhere");
 
@@ -106,6 +120,7 @@ public class OrderMenuListActivity extends AppCompatActivity {
                 dietListAdapter = new OrderMenuListAdapter(dietMenuModels, OrderMenuListActivity.this,total,from);
                 menulist.setAdapter(dietListAdapter);
             }
+            setDeliveryPoint();
             loading.setVisibility(View.GONE);
         }
 
@@ -141,7 +156,9 @@ public class OrderMenuListActivity extends AppCompatActivity {
                         dietListAdapter = new OrderMenuListAdapter(dietMenuModels, OrderMenuListActivity.this,total,from);
                         menulist.setAdapter(dietListAdapter);
                         loading.setVisibility(View.GONE);
+                        setDeliveryPoint();
                     }
+
 
                 }
 
@@ -155,21 +172,57 @@ public class OrderMenuListActivity extends AppCompatActivity {
 
     }
 
+    public void setDeliveryPoint(){
+
+        deliverPointRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        DeliveryPoint deliveryPoint = snapshot.getValue(DeliveryPoint.class);
+                        deliveryPoint.setKey(snapshot.getKey());
+                        deliveryPointList.add(deliveryPoint);
+                        placeName.add(deliveryPoint.getAddress());
+                    }
+
+                    if(placeName.size()>0) {
+                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(OrderMenuListActivity.this,
+                                android.R.layout.simple_spinner_item, placeName);
+                        adapter.setDropDownViewResource(R.layout.spinner_dropdown);
+                        deliverPoint.setAdapter(adapter);
+                        deliverPoint.setSelection(0);
+                    }
+
+                }else {
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     public void initiateView(){
 
         menulist = (ListView) findViewById(R.id.lst_menu);
-        address = (TextView) findViewById(R.id.txt_address);
         price = (TextView) findViewById(R.id.txt_total);
         proceed = (Button) findViewById(R.id.btn_proceed);
         loading =(ProgressWheel) findViewById(R.id.loading);
-        edit = (TextView) findViewById(R.id.txt_edit);
-        edit.setTypeface(FontManager.getTypeface(this, FontManager.FONTAWESOME));
+        deliverPoint = (Spinner) findViewById(R.id.sp_adrs);
 
-        edit.setOnClickListener(new View.OnClickListener() {
+        deliverPoint.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(OrderMenuListActivity.this,MyAddressActivity.class);
-                startActivity(intent);
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
             }
         });
 
@@ -278,16 +331,10 @@ public class OrderMenuListActivity extends AppCompatActivity {
 
         if(from.equalsIgnoreCase("MyOrder")){
 
+            deliverPoint.setEnabled(false);
         }
-        else if(from.equalsIgnoreCase("Reorder")){
-
-        }
-        else {
-            String addres = PreferenceManager.getDefaultSharedPreferences(OrderMenuListActivity.this).getString("Address", "");
-            if (addres.length() <= 0)
-                address.setText("Tap Here To Add Address");
-            else
-                address.setText(addres);
+        else{
+            deliverPoint.setEnabled(true);
         }
     }
 
