@@ -11,7 +11,7 @@ import android.view.WindowManager;
 
 public class SplashScreen extends AppCompatActivity {
 
-    int sleeptime=2000;
+    int sleeptime=1500;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

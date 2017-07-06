@@ -1,16 +1,20 @@
 package com.realizer.sallado;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -29,6 +33,7 @@ import com.realizer.sallado.databasemodel.UserDietProgram;
 import com.realizer.sallado.model.DietPlanModel;
 import com.realizer.sallado.model.MedicalPanelListModel;
 import com.realizer.sallado.utils.Constants;
+import com.realizer.sallado.utils.FontManager;
 import com.realizer.sallado.utils.Singleton;
 import com.realizer.sallado.view.ProgressWheel;
 
@@ -107,11 +112,63 @@ public class DietPlanListActivity extends AppCompatActivity {
             });
         }
         else {
+
             actionBar.setTitle(Constants.actionBarTitle("My Diet Program", this));
-            setData();
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(DietPlanListActivity.this);
+            if(preferences.getBoolean("IsSkip",false))
+            {
+                alertDialogLogin(DietPlanListActivity.this,"Login","Please Login to use this feature");
+            }
+            else {
+                setData();
+            }
 
         }
 
+
+    }
+
+    public  void alertDialogLogin(final Context context, String title, String message) {
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+        View dialoglayout = inflater.inflate(R.layout.custom_dialogbox, null);
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setView(dialoglayout);
+
+
+        Button buttonok= (Button) dialoglayout.findViewById(R.id.alert_btn_ok);
+        TextView titleName=(TextView) dialoglayout.findViewById(R.id.alert_dialog_title);
+        TextView alertMsg=(TextView) dialoglayout.findViewById(R.id.alert_dialog_message);
+        TextView close=(TextView) dialoglayout.findViewById(R.id.txt_close);
+        close.setTypeface(FontManager.getTypeface(context, FontManager.FONTAWESOME));
+        buttonok.setText("Login");
+        close.setVisibility(View.GONE);
+        final AlertDialog alertDialog = builder.create();
+        alertDialog.setCancelable(false);
+
+
+        buttonok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(DietPlanListActivity.this, LoginActivity.class);
+                startActivity(intent);
+                alertDialog.dismiss();
+                finishAffinity();
+            }
+        });
+
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+
+        titleName.setText(title);
+        alertMsg.setText(message);
+
+        alertDialog.show();
 
     }
 

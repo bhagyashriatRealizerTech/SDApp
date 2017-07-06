@@ -33,6 +33,7 @@
             android:id="@+id/img_user"
             android:scaleType="fitXY"
             android:padding="5dp"
+            android:src="@drawable/addimage"
             android:layout_below="@+id/appText"
             android:background="@drawable/dashboard_icon_background"
             />

@@ -22,21 +22,17 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.realizer.sallado.databasemodel.User;
 import com.realizer.sallado.utils.Constants;
 import com.realizer.sallado.utils.FontManager;
 import com.realizer.sallado.utils.Singleton;
@@ -52,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     DatabaseReference myRef;
     FirebaseStorage storage;
     StorageReference imageRef;
+    MenuItem logout,myaccount,myorder;
 
     int[] resources = {
             R.drawable.image1,
@@ -93,28 +90,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void uploadImage(ImageView imageView){
-
-        Bitmap bitmap=((BitmapDrawable)imageView.getDrawable()).getBitmap();
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] data = baos.toByteArray();
-
-        UploadTask uploadTask = imageRef.putBytes(data);
-        uploadTask.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle unsuccessful uploads
-            }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
-                Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                Log.d("URI",downloadUrl.toString());
-            }
-        });
-    }
 
     public void initiateView(){
 
@@ -170,6 +145,21 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.dash_setting, menu);
+        myaccount = menu.findItem(R.id.user_profile);
+        myorder = menu.findItem(R.id.user_order);
+        logout = menu.findItem(R.id.user_logout);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+        if(preferences.getBoolean("IsSkip",false))
+        {
+            myaccount.setVisible(false);
+            myorder.setVisible(false);
+            logout.setVisible(false);
+        }
+        else {
+            myaccount.setVisible(true);
+            myorder.setVisible(true);
+            logout.setVisible(true);
+        }
 
         return true;
     }
@@ -206,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
 
             case R.id.about_us:
-                Intent intent3 = new Intent(MainActivity.this, MainActivity.class);
+                Intent intent3 = new Intent(MainActivity.this, AboutActivity.class);
                 startActivity(intent3);
                 return true;
             default:
@@ -245,5 +235,7 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onTouchEvent(event);
     }
+
+
 }
 

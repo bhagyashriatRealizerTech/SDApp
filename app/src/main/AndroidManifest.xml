@@ -103,6 +103,9 @@
         <activity android:name=".WelcomeActivity"
             android:screenOrientation="portrait"/>
 
+        <activity android:name=".AboutActivity"
+            android:screenOrientation="portrait"/>
+
     </application>
 
 </manifest>

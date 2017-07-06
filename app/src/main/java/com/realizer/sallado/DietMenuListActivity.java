@@ -1,14 +1,20 @@
 package com.realizer.sallado;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -27,6 +33,7 @@ import com.realizer.sallado.model.DietMenuModel;
 import com.realizer.sallado.model.DietPlanModel;
 import com.realizer.sallado.model.MedicalPanelListModel;
 import com.realizer.sallado.utils.Constants;
+import com.realizer.sallado.utils.FontManager;
 import com.realizer.sallado.utils.Singleton;
 import com.realizer.sallado.view.ProgressWheel;
 
@@ -129,18 +136,74 @@ public class DietMenuListActivity extends AppCompatActivity {
         order.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(orderedFoodList.size()>0) {
-                    Intent intent = new Intent(DietMenuListActivity.this, OrderMenuListActivity.class);
-                    intent.putExtra("OrderedFood", (Serializable) orderedFoodList);
-                    intent.putExtra("FromWhere","MenuLIst");
-                    intent.putExtra("TotalPrice", price.getText());
-                    startActivity(intent);
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(DietMenuListActivity.this);
+                if(preferences.getBoolean("IsSkip",false))
+                {
+                    alertDialogLogin(DietMenuListActivity.this,"Login","Please Login to place Order.");
                 }
                 else {
-                    Constants.alertDialog(DietMenuListActivity.this,"Order","Please select at least one item");
-                }
+
+                    if(Constants.isConnectingToInternet(DietMenuListActivity.this))
+                    {
+                        if (orderedFoodList.size() > 0) {
+                            Intent intent = new Intent(DietMenuListActivity.this, OrderMenuListActivity.class);
+                            intent.putExtra("OrderedFood", (Serializable) orderedFoodList);
+                            intent.putExtra("FromWhere", "MenuLIst");
+                            intent.putExtra("TotalPrice", price.getText());
+                            startActivity(intent);
+                        } else {
+                            Constants.alertDialog(DietMenuListActivity.this, "Order", "Please select at least one item");
+                        }
+                    }
+
+                    else
+                        Constants.alertDialog(DietMenuListActivity.this,"Network Error","Your device not connected to internet");
+            }
             }
         });
+    }
+    public  void alertDialogLogin(final Context context, String title, String message) {
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+        View dialoglayout = inflater.inflate(R.layout.custom_dialogbox, null);
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setView(dialoglayout);
+
+
+        Button buttonok= (Button) dialoglayout.findViewById(R.id.alert_btn_ok);
+        TextView titleName=(TextView) dialoglayout.findViewById(R.id.alert_dialog_title);
+        TextView alertMsg=(TextView) dialoglayout.findViewById(R.id.alert_dialog_message);
+        TextView close=(TextView) dialoglayout.findViewById(R.id.txt_close);
+        close.setTypeface(FontManager.getTypeface(context, FontManager.FONTAWESOME));
+        buttonok.setText("Login");
+        close.setVisibility(View.GONE);
+        final AlertDialog alertDialog = builder.create();
+        alertDialog.setCancelable(false);
+
+
+        buttonok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(DietMenuListActivity.this, LoginActivity.class);
+                startActivity(intent);
+                alertDialog.dismiss();
+                finishAffinity();
+            }
+        });
+
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+
+        titleName.setText(title);
+        alertMsg.setText(message);
+
+        alertDialog.show();
+
     }
 
     @Override

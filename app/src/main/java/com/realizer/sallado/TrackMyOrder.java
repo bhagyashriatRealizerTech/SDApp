@@ -34,6 +34,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DataSnapshot;
@@ -67,7 +68,7 @@ public class TrackMyOrder extends AppCompatActivity implements OnMapReadyCallbac
     private int PROXIMITY_RADIUS = 10000;
     GoogleApiClient mGoogleApiClient;
     Location mLastLocation;
-    Marker mCurrLocationMarker;
+    Marker mCurrLocationMarker,mDriverMarker;
     LocationRequest mLocationRequest;
     static ProgressWheel loading;
     LocationManager locationmanager;
@@ -162,20 +163,14 @@ public class TrackMyOrder extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public void setDriverMarker(String id){
-
-        driverRef.child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+        createMarker(userDietDelivery);
+        driverRef.child(id).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     driver = dataSnapshot.getValue(Driver.class);
-
-                    latitude = driver.getLatitude();
-                    longitude = driver.getLongitude();
-
                     if(mMap != null) {
-                        mMap.clear();
-                        myMarker();
-                        createMarker(userDietDelivery);
+                        createDriverMarker(driver);
                     }
                 }
                 else {
@@ -190,106 +185,35 @@ public class TrackMyOrder extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
-/*    public void setData(UserDietDelivery userDietDelivery,int i){
 
-        Geocoder coder = new Geocoder(this);
-        try {
-            ArrayList<Address> adresses = (ArrayList<Address>) coder.getFromLocationName(userDietDelivery.getDeliveryPoint(), 1);
-            for(Address add : adresses){
-                //if (statement) {//Controls to ensure it is right address such as country etc.
-                    double longitude = add.getLongitude();
-                    double latitude = add.getLatitude();
-                com.realizer.salladodriver.databasemodel.Location location = new com.realizer.salladodriver.databasemodel.Location();
-                location.setLatitude(latitude);
-                location.setLongitude(longitude);
-                location.setUserDietDelivery(userDietDelivery);
-                locationList.add(location);
-                //}
-
-                createMarker(latitude,longitude,userDietDelivery.getCustomerName());
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    public  JSONObject getLocationInfo(String address) {
-        StringBuilder stringBuilder = new StringBuilder();
-        try {
-
-            address = address.replaceAll(" ","%20");
-
-            HttpPost httppost = new HttpPost("http://maps.google.com/maps/api/geocode/json?address=" + address + "&sensor=false");
-            HttpClient client = new DefaultHttpClient();
-            HttpResponse response;
-            stringBuilder = new StringBuilder();
-
-
-            response = client.execute(httppost);
-            HttpEntity entity = response.getEntity();
-            InputStream stream = entity.getContent();
-            int b;
-            while ((b = stream.read()) != -1) {
-                stringBuilder.append((char) b);
-            }
-        } catch (ClientProtocolException e) {
-        } catch (IOException e) {
-        }
-
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject = new JSONObject(stringBuilder.toString());
-        } catch (JSONException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-        return jsonObject;
-    }
-
-    public  boolean getLatLong(JSONObject jsonObject,UserDietDelivery userDietDelivery) {
-
-        try {
-
-            double longitute = ((JSONArray)jsonObject.get("results")).getJSONObject(0)
-                    .getJSONObject("geometry").getJSONObject("location")
-                    .getDouble("lng");
-
-            double latitude = ((JSONArray)jsonObject.get("results")).getJSONObject(0)
-                    .getJSONObject("geometry").getJSONObject("location")
-                    .getDouble("lat");
-
-            com.realizer.salladodriver.databasemodel.Location location = new com.realizer.salladodriver.databasemodel.Location();
-            location.setLatitude(latitude);
-            location.setLongitude(longitute);
-            location.setUserDietDelivery(userDietDelivery);
-            locationList.add(location);
-            //}
-
-            createMarker(latitude,longitude,userDietDelivery.getCustomerName());
-
-
-        } catch (JSONException e) {
-            return false;
-
-        }
-
-        return true;
-    }*/
 
     protected void createMarker(UserDietDelivery userDietDelivery) {
 
         mMap.addMarker(new MarkerOptions()
                 .position(new LatLng(userDietDelivery.getLatitude(), userDietDelivery.getLongitude()))
                 .anchor(0.5f, 0.5f)
-                .title(userDietDelivery.getCustomerName())
+                .title(userDietDelivery.getDeliveryPoint())
                 .snippet("")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA)).visible(true));
 
         /*.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA)).visible(true));*/
 
         /*.icon(BitmapDescriptorFactory.fromBitmap(writeTextOnDrawable(R.drawable.map, near)))*/
+    }
+
+    protected void createDriverMarker(Driver driver2) {
+
+        if (mDriverMarker != null) {
+            mDriverMarker.remove();
+        }
+        LatLng latLng = new LatLng(driver2.getLatitude(), driver2.getLongitude());
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(latLng);
+        markerOptions.title(driver2.getDriverName());
+        markerOptions.anchor(0.5f, 0.5f);
+        markerOptions.snippet("");
+        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+        mDriverMarker = mMap.addMarker(markerOptions);
     }
 
 
@@ -309,26 +233,27 @@ public class TrackMyOrder extends AppCompatActivity implements OnMapReadyCallbac
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
         if (canGetLocation() == true) {
-            if (provider != null & !provider.equals(""))
+            if (provider != null ) {
+                if (!provider.equals("")) {
+                    Location locatin = UtilLocation.getLastKnownLoaction(true, TrackMyOrder.this);
+                    if (locatin != null) {
 
-            {
-                Location locatin = UtilLocation.getLastKnownLoaction(true, TrackMyOrder.this);
-                if (locatin != null) {
-                    //latitude = locatin.getLatitude();
-                    //longitude = locatin.getLongitude();
-
+                    } else {
+                        // Toast.makeText(AutoSyncService.this, "location not found", Toast.LENGTH_LONG).show();
+                    }
 
                 } else {
-                    // Toast.makeText(AutoSyncService.this, "location not found", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(AutoSyncService.this,"Provider is null",Toast.LENGTH_LONG).show();
                 }
-            } else {
-                //Toast.makeText(AutoSyncService.this,"Provider is null",Toast.LENGTH_LONG).show();
+            }
+            else {
+                showSettingsAlert();
             }
 
             //DO SOMETHING USEFUL HERE. ALL GPS PROVIDERS ARE CURRENTLY ENABLED
         } else {
             //SHOW OUR SETTINGS ALERT, AND LET THE USE TURN ON ALL THE GPS PROVIDERS
-            //showSettingsAlert();
+            showSettingsAlert();
         }
 
         //Initialize Google Play Services
@@ -352,7 +277,7 @@ public class TrackMyOrder extends AppCompatActivity implements OnMapReadyCallbac
         LatLng latLng = new LatLng(latitude, longitude);
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(latLng);
-        markerOptions.title("My Position");
+        markerOptions.title("Me");
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
         mCurrLocationMarker = mMap.addMarker(markerOptions);
 
@@ -406,7 +331,7 @@ public class TrackMyOrder extends AppCompatActivity implements OnMapReadyCallbac
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(latLng);
-        markerOptions.title("Current Position");
+        markerOptions.title("Me");
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
         mCurrLocationMarker = mMap.addMarker(markerOptions);
 

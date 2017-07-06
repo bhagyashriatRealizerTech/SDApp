@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -23,6 +24,7 @@ import android.widget.DatePicker;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
@@ -40,6 +42,7 @@ import com.realizer.sallado.databasemodel.User;
 import com.realizer.sallado.databasemodel.UserDietProgram;
 import com.realizer.sallado.model.DietPlanCalenderModel;
 import com.realizer.sallado.utils.Constants;
+import com.realizer.sallado.utils.FontManager;
 import com.realizer.sallado.utils.ImageStorage;
 import com.realizer.sallado.utils.Singleton;
 import com.realizer.sallado.view.ExpandableHeightGridView;
@@ -349,10 +352,68 @@ public class DietPlanDetailActivity extends AppCompatActivity {
         book_plan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                planClick();
+
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(DietPlanDetailActivity.this);
+                if(preferences.getBoolean("IsSkip",false))
+                {
+                    alertDialogLogin(DietPlanDetailActivity.this,"Login","Please Login to book this Plan");
+                }
+                else {
+                    if(Constants.isConnectingToInternet(DietPlanDetailActivity.this))
+                    planClick();
+                    else
+                        Constants.alertDialog(DietPlanDetailActivity.this,"Network Error","Your device not connected to internet");
+                }
+
             }
         });
     }
+
+
+    public  void alertDialogLogin(final Context context, String title, String message) {
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+        View dialoglayout = inflater.inflate(R.layout.custom_dialogbox, null);
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setView(dialoglayout);
+
+
+        Button buttonok= (Button) dialoglayout.findViewById(R.id.alert_btn_ok);
+        TextView titleName=(TextView) dialoglayout.findViewById(R.id.alert_dialog_title);
+        TextView alertMsg=(TextView) dialoglayout.findViewById(R.id.alert_dialog_message);
+        TextView close=(TextView) dialoglayout.findViewById(R.id.txt_close);
+        close.setTypeface(FontManager.getTypeface(context, FontManager.FONTAWESOME));
+        buttonok.setText("Login");
+        close.setVisibility(View.GONE);
+        final AlertDialog alertDialog = builder.create();
+        alertDialog.setCancelable(false);
+
+
+        buttonok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(DietPlanDetailActivity.this, LoginActivity.class);
+                startActivity(intent);
+                alertDialog.dismiss();
+                finishAffinity();
+            }
+        });
+
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+
+        titleName.setText(title);
+        alertMsg.setText(message);
+
+        alertDialog.show();
+
+    }
+
     public final void planClick( ) {
         Calendar c = Calendar.getInstance();
         int year = c.get(Calendar.YEAR);

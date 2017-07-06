@@ -85,7 +85,7 @@ import java.util.concurrent.Callable;
 
 public class LoginActivity extends AppCompatActivity {
     Button btn_login;
-    TextView signup;
+    TextView signup,skip;
     CallbackManager mFacebookCallbackManager;
     LoginButton mFacebookSignInButton;
     SignInButton mGoogleSignInButton;
@@ -243,6 +243,7 @@ public class LoginActivity extends AppCompatActivity {
 
         btn_login = (Button) findViewById(R.id.btn_Submit);
         signup = (TextView) findViewById(R.id.txt_signup);
+        skip = (TextView) findViewById(R.id.txt_skip);
         mobileno = (EditText) findViewById(R.id.edt_mobileno);
         loading =(ProgressWheel) findViewById(R.id.loading);
 
@@ -264,6 +265,20 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         });
+
+        skip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
+                SharedPreferences.Editor edit = preferences.edit();
+                edit.putBoolean("IsSkip",true);
+                edit.commit();
+
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 
     private void writeNewPost(User newUser) {
@@ -272,6 +287,7 @@ public class LoginActivity extends AppCompatActivity {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
         SharedPreferences.Editor edit = preferences.edit();
         edit.putString("UserID",ref.getKey());
+        edit.putBoolean("IsSkip",false);
         edit.commit();
 
         loading.setVisibility(View.GONE);
@@ -300,6 +316,7 @@ public class LoginActivity extends AppCompatActivity {
                                 edit.putString("MobNo", user.getMobileNo());
                                 edit.putString("UserID", issue.getKey());
                                 edit.putString("IsLogin", "true");
+                                edit.putBoolean("IsSkip",false);
                                 edit.apply();
 
                             }
@@ -344,6 +361,7 @@ public class LoginActivity extends AppCompatActivity {
                             edit.putString("MobNo", user.getMobileNo());
                             edit.putString("UserID",issue.getKey());
                             edit.putString("IsLogin","true");
+                            edit.putBoolean("IsSkip",false);
                             edit.apply();
 
                             loading.setVisibility(View.GONE);

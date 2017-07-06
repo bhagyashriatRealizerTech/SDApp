@@ -36,6 +36,7 @@ import com.realizer.sallado.utils.FontManager;
 import com.realizer.sallado.utils.Singleton;
 import com.realizer.sallado.view.ProgressWheel;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -178,40 +179,50 @@ public class OrderMenuListActivity extends AppCompatActivity {
         proceed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (dietMenuModels.size() > 0) {
-                    loading.setVisibility(View.VISIBLE);
-                    for (int i = 0; i < dietMenuModels.size(); i++) {
-                        if(Integer.valueOf(dietMenuModels.get(i).getQuantity()) > 0) {
-                            OrderedFood orderedFood = new OrderedFood();
-                            orderedFood.setDishId(dietMenuModels.get(i).getMenuID());
-                            orderedFood.setDishQuantity(dietMenuModels.get(i).getQuantity());
-                            orderedFood.setDishName(dietMenuModels.get(i).getMenuName());
-                            orderedFoodList.add(orderedFood);
+
+                if(Constants.isConnectingToInternet(OrderMenuListActivity.this))
+                {
+                    if (dietMenuModels.size() > 0) {
+                        loading.setVisibility(View.VISIBLE);
+                        for (int i = 0; i < dietMenuModels.size(); i++) {
+                            if(Integer.valueOf(dietMenuModels.get(i).getQuantity()) > 0) {
+                                OrderedFood orderedFood = new OrderedFood();
+                                orderedFood.setDishId(dietMenuModels.get(i).getMenuID());
+                                orderedFood.setDishQuantity(dietMenuModels.get(i).getQuantity());
+                                orderedFood.setDishName(dietMenuModels.get(i).getMenuName());
+                                orderedFoodList.add(orderedFood);
+                            }
                         }
+
+                        String orderdate = new SimpleDateFormat("dd/MM/yyyy hh:mm a").format(new Date());
+                        int totalPrice = total + 67;
+
+                        OrderFood orderFood = new OrderFood();
+                        orderFood.setUserID(userid);
+                        orderFood.setOrderDate(orderdate);
+                        orderFood.setOrderedFood(orderedFoodList);
+                        orderFood.setOrderId(UUID.randomUUID().toString());
+                        orderFood.setOrderLastUpdate(orderdate);
+                        orderFood.setOrderStatus("Placed");
+                        orderFood.setOrderTax("67");
+                        orderFood.setOrderTotalPrice("" + totalPrice);
+                        orderFood.setDeliveryPoint("");
+
+                        DatabaseReference ref = orderRef.push();
+                        ref.setValue(orderFood);
+
+                        loading.setVisibility(View.GONE);
+                        Constants.alertDialog(OrderMenuListActivity.this, "Order", "Your Order Placed Successfully.\n\nOrder Time: " + orderFood.getOrderDate() + "\nPrice: ₹ " + orderFood.getOrderTotalPrice());
                     }
-
-                    String orderdate = new SimpleDateFormat("dd/MM/yyyy hh:mm a").format(new Date());
-                    int totalPrice = total + 67;
-
-                    OrderFood orderFood = new OrderFood();
-                    orderFood.setUserID(userid);
-                    orderFood.setOrderDate(orderdate);
-                    orderFood.setOrderedFood(orderedFoodList);
-                    orderFood.setOrderId(UUID.randomUUID().toString());
-                    orderFood.setOrderLastUpdate(orderdate);
-                    orderFood.setOrderStatus("Placed");
-                    orderFood.setOrderTax("67");
-                    orderFood.setOrderTotalPrice("" + totalPrice);
-
-                    DatabaseReference ref = orderRef.push();
-                    ref.setValue(orderFood);
-
-                    loading.setVisibility(View.GONE);
-                    Constants.alertDialog(OrderMenuListActivity.this, "Order", "Your Order Placed Successfully.\n\nOrder Time: " + orderFood.getOrderDate() + "\nPrice: ₹ " + orderFood.getOrderTotalPrice());
+                    else {
+                        Constants.alertDialog(OrderMenuListActivity.this, "Order", "Please Add at least one item to cart\n");
+                    }
                 }
-                else {
-                    Constants.alertDialog(OrderMenuListActivity.this, "Order", "Please Add at least one item to cart\n");
-                }
+
+                else
+                    Constants.alertDialog(OrderMenuListActivity.this,"Network Error","Your device not connected to internet");
+
+
             }
 
         });
@@ -264,11 +275,20 @@ public class OrderMenuListActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        String addres = PreferenceManager.getDefaultSharedPreferences(OrderMenuListActivity.this).getString("Address", "");
-        if(addres.length()<=0)
-            address.setText("Tap Here To Add Address");
-        else
-            address.setText(addres);
+
+        if(from.equalsIgnoreCase("MyOrder")){
+
+        }
+        else if(from.equalsIgnoreCase("Reorder")){
+
+        }
+        else {
+            String addres = PreferenceManager.getDefaultSharedPreferences(OrderMenuListActivity.this).getString("Address", "");
+            if (addres.length() <= 0)
+                address.setText("Tap Here To Add Address");
+            else
+                address.setText(addres);
+        }
     }
 
     @Override

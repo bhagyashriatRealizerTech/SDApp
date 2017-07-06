@@ -262,6 +262,7 @@ public class SignUpActivity extends AppCompatActivity {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(SignUpActivity.this);
         SharedPreferences.Editor edit = preferences.edit();
         edit.putString("UserID",ref.getKey());
+        edit.putBoolean("IsSkip",false);
         edit.commit();
 
         loading.setVisibility(View.GONE);

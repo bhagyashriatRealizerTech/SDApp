@@ -20,6 +20,8 @@ import android.widget.TextView;
 import com.realizer.sallado.R;
 import com.realizer.sallado.databasemodel.Dish;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -46,7 +48,7 @@ public class Constants {
     }
 
     public static boolean isConnectingToInternet(Context context){
-        // get Connectivity Manager object to check connection
+       /* // get Connectivity Manager object to check connection
         ConnectivityManager connec
                 =(ConnectivityManager) context.getSystemService(
                 Context.CONNECTIVITY_SERVICE);
@@ -66,7 +68,14 @@ public class Constants {
             //Toast.makeText(context, " Not Connected ", Toast.LENGTH_LONG).show();
             return false;
         }
-        return false;
+        return false;*/
+        InetAddress ipAddr = null; //You can replace it with your name
+        try {
+            ipAddr = InetAddress.getByName("google.com");
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+        return !ipAddr.equals("");
     }
 
     public static Date convertTime(String time){
@@ -231,6 +240,44 @@ public class Constants {
         close.setTypeface(FontManager.getTypeface(context, FontManager.FONTAWESOME));
 
         relativeLayout.setVisibility(View.GONE);
+
+        final AlertDialog alertDialog = builder.create();
+
+        buttonok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+
+        titleName.setText(title);
+        alertMsg.setText(message);
+
+        alertDialog.show();
+
+    }
+
+    public static void alertDialogLogin(final Context context, String title, String message) {
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+        View dialoglayout = inflater.inflate(R.layout.custom_dialogbox, null);
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setView(dialoglayout);
+
+        RelativeLayout relativeLayout = (RelativeLayout) dialoglayout.findViewById(R.id.layout_buttton);
+        Button buttonok= (Button) dialoglayout.findViewById(R.id.alert_btn_ok);
+        TextView titleName=(TextView) dialoglayout.findViewById(R.id.alert_dialog_title);
+        TextView alertMsg=(TextView) dialoglayout.findViewById(R.id.alert_dialog_message);
+        TextView close=(TextView) dialoglayout.findViewById(R.id.txt_close);
+        close.setTypeface(FontManager.getTypeface(context, FontManager.FONTAWESOME));
+        buttonok.setText("Login");
 
         final AlertDialog alertDialog = builder.create();
 

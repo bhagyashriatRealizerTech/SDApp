@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+    android:background="#ffffff"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <TextView
@@ -22,6 +23,7 @@
         android:layout_marginRight="5dp"
         android:layout_marginTop="10dp"
         android:layout_above="@+id/layout_order"
+        android:layout_below="@+id/txtHeading"
         android:numColumns="2">
     </GridView>
 

@@ -17,6 +17,7 @@ public class OrderFood implements Serializable{
     public String orderTotalPrice;
     public List<OrderedFood> orderedFood;
     public String userID;
+    public String deliveryPoint;
 
 
     public String getOrderDate() {
@@ -81,5 +82,13 @@ public class OrderFood implements Serializable{
 
     public void setUserID(String userID) {
         this.userID = userID;
+    }
+
+    public String getDeliveryPoint() {
+        return deliveryPoint;
+    }
+
+    public void setDeliveryPoint(String deliveryPoint) {
+        this.deliveryPoint = deliveryPoint;
     }
 }

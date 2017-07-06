@@ -1,5 +1,6 @@
 package com.realizer.sallado;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -26,6 +27,7 @@ import com.realizer.sallado.utils.Constants;
 import com.realizer.sallado.utils.Singleton;
 import com.realizer.sallado.view.ProgressWheel;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -146,21 +148,30 @@ public class BookAppointmentActivity extends AppCompatActivity {
     }
 
     public void bookAppointment(){
-        if(slot != null) {
-            DatabaseReference ref = appointmenteRef.push();
-            BookAppointment bookAppointment = new BookAppointment();
-            bookAppointment.setDate(date);
-            bookAppointment.setSlot(slot);
-            bookAppointment.setDoctorId(doctorid);
-            bookAppointment.setUserId(userid);
-            ref.setValue(bookAppointment);
-            loading.setVisibility(View.GONE);
-            Constants.alertDialog(BookAppointmentActivity.this, "Appointment", "Your Appointment Request accepted Successfully.\nYou will receive call from our team to confirm request on Your registered mobile number shortly.");
+
+        if(Constants.isConnectingToInternet(BookAppointmentActivity.this))
+        {
+            if(slot != null) {
+                DatabaseReference ref = appointmenteRef.push();
+                BookAppointment bookAppointment = new BookAppointment();
+                bookAppointment.setDate(date);
+                bookAppointment.setSlot(slot);
+                bookAppointment.setDoctorId(doctorid);
+                bookAppointment.setUserId(userid);
+                ref.setValue(bookAppointment);
+                loading.setVisibility(View.GONE);
+                Constants.alertDialog(BookAppointmentActivity.this, "Appointment", "Your Appointment Request accepted Successfully.\nYou will receive call from our team to confirm request on Your registered mobile number shortly.");
+            }
+            else {
+                loading.setVisibility(View.GONE);
+                Constants.alertDialog(BookAppointmentActivity.this, "Appointment","Please Select Time Slot");
+            }
         }
-        else {
-            loading.setVisibility(View.GONE);
-            Constants.alertDialog(BookAppointmentActivity.this, "Appointment","Please Select Time Slot");
-        }
+
+        else
+            Constants.alertDialog(BookAppointmentActivity.this,"Network Error","Your device not connected to internet");
+
+
     }
 
 
