@@ -186,6 +186,8 @@ public class OrderMenuListActivity extends AppCompatActivity {
                         placeName.add(deliveryPoint.getAddress());
                     }
 
+
+
                     if(placeName.size()>0) {
                         ArrayAdapter<String> adapter = new ArrayAdapter<String>(OrderMenuListActivity.this,
                                 android.R.layout.simple_spinner_item, placeName);
